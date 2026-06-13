@@ -191,16 +191,6 @@
   display: block;
 }
 
-.btn-volume .icon-muted path {
-  fill: currentColor;
-}
-
-.btn-volume .icon-muted line {
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-}
-
 /* === 进度条（加宽） === */
 .progress {
   position: relative;
