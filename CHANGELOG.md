@@ -12,9 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fullscreen mode with dedicated button
 - Dual theme system (4 backgrounds × 7 accent colors)
 - Theme switching shortcuts (T for accent, B for background)
-- Left/Right arrow keys for seeking ±5 seconds
+- Left/Right arrow keys for seeking ±5 seconds (now global, no focus required)
+- Progress bar scrubbing with live time preview during drag (seek applies on release)
 - Service Worker for offline functionality
 - PWA support (installable to home screen)
+- iframe `sandbox` attribute for embed player security
+- Embed domain whitelist validation in `normalizer.js`
+- `.gitignore` rule for `ffmpeg.zip`
 
 ### Changed
 - Simplified configuration format from object to array
@@ -24,14 +28,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved PWA files to `assets/pwa/` directory
 - Global English localization (user-facing content)
 - Improved project structure and organization
-- Service Worker cache version bumped to v6 to purge stale assets
+- Service Worker cache version bumped to v8
+- Card layout switched from fixed single-screen to flow-based, allowing vertical scroll when content overflows small viewports
 - `pickTodaySong()` now accepts `dateKey` parameter for date-based selection
 - `getDuration()` simplified to return `audio.duration` directly
 - `formatDate()` refactored to use shared `Intl.DateTimeFormat` instance
+- Replaced corrupted MP3 source file with full-duration version (9.1 MB)
+- Artist metadata updated to `LunaLiu刘不语`
+- Audio path now fully config-driven (removed hardcoded `<audio>` `src` in HTML)
+- README: added prominent GitHub Pages Live Demo link
 
 ### Removed
 - VBR duration correction logic (caused premature playback truncation)
 - Ineffective `iframe.height` assignment in embed player
+- Unused `formatDateKey` import in `main.js`
+- Outdated comment about hardcoded audio `src` in `main.js`
 
 ### Fixed
 - VBR MP3 duration correction logic truncating playback prematurely (core bug)
@@ -49,6 +60,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `formatDate()` hardcoded locale (simplified with `Intl.DateTimeFormat`)
 - Theme switching toast showing twice (SW cache purge)
 - Removed unnecessary progress limitations
+- Embed controls not hidden when switching to embed source
+- Space/Enter key hijacking button click on non-playback elements
+- Song carousel missing data validation for invalid entries
+- `seekto` handler not guarding against NaN detail values
+- Small-screen overflow: content clipped and unreachable, cover hidden behind fixed corner buttons
 
 ## [1.0.0] - 2026-06-13
 
