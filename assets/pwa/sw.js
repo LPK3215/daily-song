@@ -3,26 +3,26 @@
    Network-First: Data files (JSON) & HTML
 */
 
-const CACHE_STATIC = "dailysong-static-v5";
-const CACHE_DATA = "dailysong-data-v5";
+const CACHE_STATIC = "dailysong-static-v6";
+const CACHE_DATA = "dailysong-data-v6";
 
 const STATIC_ASSETS = [
-  "/",
-  "/index.html",
-  "/assets/css/base.css",
-  "/assets/css/card.css",
-  "/assets/css/player.css",
-  "/assets/js/utils.js",
-  "/assets/js/main.js",
-  "/assets/js/render.js",
-  "/assets/js/audioPlayer.js",
-  "/assets/js/embedPlayer.js",
-  "/assets/js/activeSongLoader.js",
-  "/assets/js/songSelector.js",
-  "/assets/js/config.js",
-  "/assets/js/normalizer.js",
-  "/assets/js/themeSwitch.js",
-  "/assets/pwa/manifest.json",
+  "../../",
+  "../../index.html",
+  "../../assets/css/base.css",
+  "../../assets/css/card.css",
+  "../../assets/css/player.css",
+  "../../assets/js/utils.js",
+  "../../assets/js/main.js",
+  "../../assets/js/render.js",
+  "../../assets/js/audioPlayer.js",
+  "../../assets/js/embedPlayer.js",
+  "../../assets/js/activeSongLoader.js",
+  "../../assets/js/songSelector.js",
+  "../../assets/js/config.js",
+  "../../assets/js/normalizer.js",
+  "../../assets/js/themeSwitch.js",
+  "../../assets/pwa/manifest.json",
 ];
 
 self.addEventListener("install", (event) => {
@@ -55,7 +55,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (url.pathname.startsWith("/data/")) {
+  if (url.pathname.includes("/data/")) {
     event.respondWith(networkFirst(event.request));
     return;
   }
