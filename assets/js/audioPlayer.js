@@ -84,7 +84,7 @@ export function setupAudioPlayer(song) {
   /* ===== 进度条拖动 seek ===== */
   function seekFromClientX(clientX) {
     const rect = progress.getBoundingClientRect();
-    const ratio = Math.min(0.995, Math.max(0, (clientX - rect.left) / rect.width));
+    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
     if (isFinite(audio.duration) && audio.duration > 0) {
       audio.currentTime = ratio * audio.duration;
     }
@@ -110,7 +110,7 @@ export function setupAudioPlayer(song) {
     if (e.key === "ArrowRight") {
       e.preventDefault();
       e.stopPropagation();
-      audio.currentTime = Math.min(audio.duration - 0.1, audio.currentTime + 5);
+      audio.currentTime = Math.min(audio.currentTime + 5, audio.duration);
     } else if (e.key === "ArrowLeft") {
       e.preventDefault();
       e.stopPropagation();
@@ -137,12 +137,12 @@ export function setupAudioPlayer(song) {
     });
     navigator.mediaSession.setActionHandler("seekto", (details) => {
       if (details.seekTime != null && isFinite(details.seekTime)) {
-        audio.currentTime = Math.min(details.seekTime, audio.duration - 0.1);
+        audio.currentTime = Math.min(details.seekTime, audio.duration);
       }
     });
     navigator.mediaSession.setActionHandler("seekforward", () => {
       if (isFinite(audio.duration)) {
-        audio.currentTime = Math.min(audio.duration - 0.1, audio.currentTime + 10);
+        audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
       }
     });
     navigator.mediaSession.setActionHandler("seekbackward", () => {

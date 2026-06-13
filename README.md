@@ -1,136 +1,123 @@
-# 每日一歌 🎵
+# Daily Song 🎵
 
-极简的「每日单曲」网页：每天自动切换一首歌，访客点开即听。纯静态前端（无构建、无后端），部署在 GitHub Pages。
+A minimalist "daily song" web page: automatically switches songs every day, visitors can listen instantly. Pure static frontend (no build tools, no backend), deployed on GitHub Pages.
 
-> 在线地址：`https://<你的用户名>.github.io/daily-song/`
+> Live demo: `https://<your-username>.github.io/daily-song/`
 
-## 特性
+## Features
 
-- **日期编排**：通过 `data/schedule.json` 按日期精确安排歌曲，支持提前规划未来多天。
-- **三种音源**：仓库内 mp3（`local`）/ 任意直链（`url`）/ 平台外链播放器（`embed`）。
-- **自定义播放器**：大播放按钮 + 可拖动进度条 + 时间显示（`local`/`url` 模式）。
-- **零依赖、模块化**：原生 ES Modules + 按职责拆分的 CSS，无框架、无打包工具。
-- 移动端优先、毛玻璃卡片、自动暗色模式。
+- **Date-based scheduling**: Arrange songs by date via `data/date-songs.json`, plan days or weeks ahead.
+- **Three audio sources**: Local mp3 (`local`) / Direct URL (`url`) / Platform embed (`embed`).
+- **Custom player**: Large play button + draggable progress bar + time display (`local`/`url` modes).
+- **Zero dependencies, modular**: Native ES Modules + responsibility-based CSS splitting, no frameworks, no bundlers.
+- Mobile-first, frosted glass cards, automatic dark mode.
 
-## 目录结构
+## Directory Structure
 
 ```
 daily-song/
-├── index.html              # 入口（GitHub Pages 要求在根目录）
+├── index.html              # Entry point (required at root for GitHub Pages)
 ├── assets/
-│   ├── css/                # 样式（按职责拆分）
-│   │   ├── base.css        #   reset + 主题变量 + 背景
-│   │   ├── card.css        #   卡片 / 封面 / 信息 / 寄语
-│   │   ├── player.css      #   自定义播放器 / 进度条 / embed
-│   │   └── theme.css       #   暗色模式
-│   └── js/                 # 脚本（原生 ES 模块）
-│       ├── main.js         #   入口，编排各模块
-│       ├── config.js       #   常量
-│       ├── utils.js        #   formatDate / formatTime / $
-│       ├── dataLoader.js   #   加载 songs.json
-│       ├── songSelector.js #   按日期选歌
-│       ├── activeSongLoader.js # 加载 schedule.json（日期匹配，优先）
-│       ├── render.js       #   封面 / 信息 / 寄语 / 错误
-│       ├── audioPlayer.js  #   自定义播放器（local/url）
-│       └── embedPlayer.js  #   iframe（embed）
+│   ├── css/                # Styles (split by responsibility)
+│   │   ├── base.css        #   Reset + theme variables + background
+│   │   ├── card.css        #   Card / cover / info / note
+│   │   ├── player.css      #   Custom player / progress bar / embed
+│   │   └── theme.css       #   Dark mode
+│   ├── js/                 # Scripts (native ES modules)
+│   │   ├── main.js         #   Entry point, orchestrates modules
+│   │   ├── config.js       #   Constants
+│   │   ├── utils.js        #   formatDate / formatTime / $
+│   │   ├── dataLoader.js   #   Load default-songs.json
+│   │   ├── songSelector.js #   Select song by date
+│   │   ├── activeSongLoader.js # Load date-songs.json (date matching, priority)
+│   │   ├── render.js       #   Cover / info / note / error
+│   │   ├── audioPlayer.js  #   Custom player (local/url)
+│   │   ├── embedPlayer.js  #   iframe (embed)
+│   │   └── themeSwitch.js  #   Theme switching
+│   └── pwa/                # PWA files
+│       ├── manifest.json   #   App manifest
+│       └── sw.js           #   Service worker
 ├── data/
-│   ├── schedule.json       # 【核心】按日期编排歌曲（可提前规划多天）
-│   └── songs.json          # 歌曲仓库（按日期轮播，作为无 schedule 时的回退）
+│   ├── date-songs.json     # [CORE] Schedule songs by date (can plan ahead)
+│   └── default-songs.json  # Song library (date-based rotation, fallback)
 ├── media/
-│   ├── audio/              # 自托管 mp3
-│   └── covers/             # 封面图（可选）
+│   ├── audio/              # Self-hosted mp3
+│   └── covers/             # Cover images (optional)
 ├── README.md
 ├── LICENSE
 └── .gitignore
 ```
 
-> 关注点分离：**表现**(css) / **行为**(js) / **数据**(data) / **媒体**(media) 各归各位，根目录只留 `index.html` 这一个入口。
+> Separation of concerns: **Presentation** (css) / **Behavior** (js) / **Data** (data) / **Media** (media) are organized separately, with only `index.html` at root.
 
-## 本地预览
+## Local Preview
 
-本项目用了原生 ES 模块 + `fetch`，**双击 `index.html`（`file://` 协议）会被浏览器拦截**。请起一个本地静态服务器：
+This project uses native ES modules + `fetch`, **double-clicking `index.html` (`file://` protocol) will be blocked by browsers**. Please start a local static server:
 
 ```bash
-# 任选其一
+# Choose one
 python -m http.server 8000
 npx serve .
 ```
 
-然后打开 <http://localhost:8000>。
+Then open <http://localhost:8000>.
 
-## 如何编排歌曲（日常操作）
+## How to Schedule Songs (Daily Operations)
 
-**只需改一个文件：`data/schedule.json`**。按日期为键，值为当天要播放的歌曲。系统根据当天日期自动匹配。
+**Just edit one file: `data/date-songs.json`**. Use dates as keys, values are songs to play that day. System automatically matches by current date.
 
-```jsonc
+```json
 {
-  "_comment": "日期格式 YYYY-MM-DD，系统按当天日期精确匹配",
-  "2026-06-13": {
-    "title": "空白",
-    "artist": "佚名",
-    "source": "local",
-    "src": "media/audio/空白.mp3",
-    "cover": "",
-    "note": ""
-  },
-  "2026-06-14": {
-    "title": "明天的歌",
-    "artist": "某歌手",
-    "source": "url",
-    "src": "https://cdn.example.com/song.mp3",
-    "cover": "",
-    "note": "明天寄语"
-  }
+  "2026-06-13": ["Song Title", "Artist", "song.mp3"],
+  "2026-06-14": ["Tomorrow's Song", "Artist 2", "https://example.com/song.mp3", "cover.jpg", "Daily note"]
 }
 ```
 
-三种 source 的 `src` 填写规则：
-| source | src 示例 | 说明 |
-|---|---|---|
-| `local` | `media/audio/xxx.mp3` | 仓库内 mp3，最稳 |
-| `url` | `https://cdn.example.com/song.mp3` | 远程直链，需服务器允许跨域 |
-| `embed` | `https://music.163.com/outchain/player?type=2&id=XXXX` | 平台外链播放器 |
+New simplified format:
+- Position 1: Song title (required)
+- Position 2: Artist (required)
+- Position 3: Audio file (required) - local filename or full URL
+- Position 4: Cover image (optional)
+- Position 5: Daily note (optional)
 
-**加载优先级**：`schedule.json`（按当天日期匹配）→ `songs.json`（按日期轮播回退）。`schedule.json` 不存在时页面照样能用。
+**Loading priority**: `date-songs.json` (match by date) → `default-songs.json` (rotation fallback). Page works even without `date-songs.json`.
 
-**未来管理页面**：读写 `schedule.json` 这一个文件即可——选日期、选歌曲、保存。系统层只读，操作层只写。
+## How to Add Songs (Expand Library)
 
-## 如何加歌（扩充歌曲仓库）
+Edit `data/default-songs.json`, add entries to the `songs` array:
 
-编辑 `data/songs.json` 的 `songs` 数组，按需追加一条：
-
-| source | 怎么填 | 前提 |
-|---|---|---|
-| `local` | mp3 放 `media/audio/`、封面放 `media/covers/`，`src` 填 `media/audio/xxx.mp3` | 总能播 |
-| `url` | `src` 填**音频文件直链**（.mp3/.m4a/.ogg） | 服务器允许跨站热链（不防盗链/不验 Referer/CORS 放行/链接不过期） |
-| `embed` | `src` 填平台**外链播放器**地址 | 平台提供 iframe；UI 由平台决定，自定义控件不可用 |
-
-```jsonc
+```json
 {
-  "title": "歌名",
-  "artist": "歌手",
-  "source": "local",            // local | url | embed
-  "src": "media/audio/001.mp3",
-  "cover": "media/covers/001.jpg", // 可空，空则用渐变兜底
-  "note": "今日寄语"               // 可空，空则隐藏
+  "anchor": "2026-06-13",
+  "songs": [
+    ["Song 1", "Artist 1", "song1.mp3"],
+    ["Song 2", "Artist 2", "https://cdn.com/song2.mp3", "cover2.jpg"],
+    ["Song 3", "Artist 3", "song3.mp3", "cover3.jpg", "Daily quote"]
+  ]
 }
 ```
 
-`anchorDate` 是轮播起算日，一般不用改。提交推送即生效。
+### ⚠️ Common Pitfalls
 
-### ⚠️ 常见坑
+- NetEase Music / QQ Music / YouTube **"copy link" gives webpage URLs with hotlink protection** → Can't use `url`, only `embed`.
+- `url` actually works for: Your own server's mp3, hotlink-friendly CDNs, archive.org, etc.
+- **Self-hosted audio = publicly downloadable**, static hosting can't prevent downloads.
+- **Deleting mp3 won't reduce repo size**: Files remain in git history, `.git` keeps growing. Use external links when possible; use git filter-repo / BFG to truly remove.
+- Single file hard limit: 100MB, repo recommended: < 1GB.
 
-- 网易云 / QQ 音乐 / YouTube **"复制"出来的是网页链接且 CDN 防盗链** → 用不了 `url`，只能 `embed`。
-- `url` 真正能用的场景：你自己服务器的 mp3、允许热链的 CDN、archive.org 等。
-- **自托管音频 = 公开可下载**，静态托管无法"只听不下"。
-- **删 mp3 不会让仓库变小**：文件仍在 git 历史里，`.git` 会持续膨胀。能用外链就别全塞进仓库；真要瘦身需重写历史（git filter-repo / BFG）。
-- 单文件硬限制 100MB，仓库建议 < 1GB。
+## Deploy to GitHub Pages
 
-## 部署到 GitHub Pages
+1. Create repo `daily-song`, push code to `main` branch.
+2. Settings → Pages → Source: select `main` branch, root `/`.
+3. Wait for deployment, visit `https://<username>.github.io/daily-song/`.
 
-1. 新建仓库 `daily-song`，推送代码到 `main`。
-2. Settings → Pages → Source 选 `main` 分支、根目录 `/`。
-3. 等待发布，访问 `https://<用户名>.github.io/daily-song/`。
+## Keyboard Shortcuts
+
+- `Space` / `Enter` - Play/Pause
+- `←` / `→` - Seek backward/forward 5 seconds
+- `T` - Switch accent color
+- `B` - Switch background theme
+- `ESC` - Exit fullscreen
 
 ## License
 

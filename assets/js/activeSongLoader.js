@@ -1,17 +1,17 @@
-/* activeSongLoader.js —— 加载当前应播放的歌曲
-   查询链路：schedule.json（日期精确匹配） → songs.json（按日期轮播回退）
-   设计意图：
-   - schedule.json 是规划层：{ "2026-06-13": {...}, "2026-06-14": {...} }
-   - 管理页面可读写 schedule.json 编排未来日期
-   - 系统层只读：按当天日期查 schedule，没有则回退轮播 */
+/* activeSongLoader.js —— Load currently playing song
+   Query chain: date-songs.json (exact date match) → default-songs.json (date-based rotation fallback)
+   Design intent:
+   - schedule.json is planning layer:{ "2026-06-13": {...}, "2026-06-14": {...} }
+   - Admin page can read/write schedule.json to plan future dates
+   - System layer read-only: query schedule by current date, fallback to rotation if not found */
 
 import { SONGS_URL } from "./config.js";
 import { pickTodaySong } from "./songSelector.js";
 import { formatDateKey } from "./utils.js";
 
-const SCHEDULE_URL = "data/schedule.json";
+const SCHEDULE_URL = "data/date-songs.json";
 
-/** 从 URL 参数读取预览日期，返回格式化的日期键；无参数则返回当天 */
+/** Read preview date from URL params, return formatted date key; return today if no params */
 function getTargetDateKey() {
   const params = new URLSearchParams(window.location.search);
   const dateParam = params.get("date");
@@ -24,18 +24,50 @@ function getTargetDateKey() {
   return formatDateKey(new Date());
 }
 
-/** 校验歌曲条目合法性 */
+/** Validate song entry (support both new and old formats)*/
 function isValidEntry(obj) {
+  // New format: array [title, artist, src, cover?, note?]
+  if (Array.isArray(obj)) {
+    return obj.length >= 3 && typeof obj[0] === "string" && typeof obj[1] === "string" && typeof obj[2] === "string";
+  }
+
+  // Old format: object { title, artist, source, src, ... }
   if (!obj || typeof obj !== "object") return false;
   if (!obj.source || !obj.src) return false;
   if (!["local", "url", "embed"].includes(obj.source)) return false;
   return true;
 }
 
-/** 补全可选字段默认值 */
-function normalizeEntry(entry) {
+/** Convert array format to standard object format */
+function normalizeArrayEntry(arr) {
+  const [title, artist, src, cover = "", note = ""] = arr;
+
+  // Auto-detect source type
+  let source = "local";
+  if (src.startsWith("http://") || src.startsWith("https://")) {
+    source = "url";
+  } else if (src.includes("youtube.com") || src.includes("bilibili.com") || src.includes("spotify.com")) {
+    source = "embed";
+  }
+
+  // Complete path
+  const fullSrc = source === "local" ? `media/audio/${src}` : src;
+  const fullCover = cover && !cover.startsWith("http") ? `media/covers/${cover}` : cover;
+
   return {
-    title: entry.title || "未命名",
+    title: title || "Untitled",
+    artist: artist || "",
+    source: source,
+    src: fullSrc,
+    cover: fullCover,
+    note: note || "",
+  };
+}
+
+/** Fill optional fields with defaults (old format)*/
+function normalizeObjectEntry(entry) {
+  return {
+    title: entry.title || "Untitled",
     artist: entry.artist || "",
     source: entry.source,
     src: entry.src,
@@ -44,15 +76,23 @@ function normalizeEntry(entry) {
   };
 }
 
+/** Unified entry: support both new and old formats */
+function normalizeEntry(entry) {
+  if (Array.isArray(entry)) {
+    return normalizeArrayEntry(entry);
+  }
+  return normalizeObjectEntry(entry);
+}
+
 /**
- * 加载当前应播放的歌曲对象
- * 支持 ?date=YYYY-MM-DD 预览指定日期歌曲
+ * Load currently playing song对象
+ * Support ?date=YYYY-MM-DD to preview songs for specific dates
  * @returns {Promise<object>} { title, artist, source, src, cover, note }
  */
 export async function loadActiveSong() {
   const targetKey = getTargetDateKey();
 
-  // 1. 读取 schedule.json，按目标日期精确匹配
+  // 1. Read schedule.json, match by target date
   let entry = null;
   try {
     const res = await fetch(`${SCHEDULE_URL}?t=${Date.now()}`, { cache: "no-store" });
@@ -64,24 +104,24 @@ export async function loadActiveSong() {
       }
     }
   } catch (_) {
-    // schedule.json 不存在或格式错误，走回退
+    // schedule.json doesn't exist or format error, fallback
   }
 
   if (entry) return normalizeEntry(entry);
 
-  // 2. 回退：按日期从 songs.json 轮播
+  // 2. Fallback: rotation from songs.json by date
   let data;
   try {
     const res = await fetch(`${SONGS_URL}?t=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     data = await res.json();
   } catch (_) {
-    throw new Error("歌单加载失败（songs.json 读取错误）");
+    throw new Error("Song list loading failed（songs.json 读取错误）");
   }
 
   const song = pickTodaySong(data);
   if (!song) {
-    throw new Error("歌单为空，请在 data/songs.json 中添加歌曲。");
+    throw new Error("Song list is empty, please add songs to data/default-songs.json.");
   }
   return song;
 }

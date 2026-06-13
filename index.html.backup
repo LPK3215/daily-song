@@ -21,7 +21,7 @@
 </head>
 <body>
   <main class="card" id="card" aria-live="polite">
-    <!-- Left corner: Background switch button -->
+    <!-- 左上角：主题切换按钮 -->
     <button class="bg-btn" id="bgBtn" type="button" aria-label="Switch background" title="Switch background (Press B)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="5"/>
@@ -29,7 +29,7 @@
       </svg>
     </button>
 
-    <!-- Accent theme switch button -->
+    <!-- 强调色主题切换按钮 -->
     <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch accent" title="Switch accent color (Press T)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="3"/>
@@ -37,7 +37,7 @@
       </svg>
     </button>
 
-    <!-- Right corner: Fullscreen button -->
+    <!-- 右上角：全屏按钮 -->
     <button class="fullscreen-btn" id="fullscreenBtn" type="button" aria-label="Fullscreen" title="Fullscreen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
@@ -45,7 +45,7 @@
     </button>
 
     <div class="card__layout">
-      <!-- Circular cover -->
+      <!-- 圆形转盘封面 -->
       <div class="card__cover-col">
         <div class="cover" id="cover">
           <div class="cover__fallback" id="coverFallback" aria-hidden="true">
@@ -54,24 +54,24 @@
         </div>
       </div>
 
-      <!-- Content area -->
+      <!-- 内容区域 -->
       <div class="card__content-col">
-        <!-- Daily Song + Date -->
+        <!-- Daily Song + 日期 -->
         <header class="card__head">
           <span class="card__brand">Daily Song</span>
           <span class="card__date" id="date">--</span>
         </header>
 
-        <!-- Song info -->
+        <!-- 歌曲信息 -->
         <div class="meta">
           <h1 class="meta__title" id="title">Loading...</h1>
           <p class="meta__artist" id="artist"></p>
         </div>
 
-        <!-- Player -->
+        <!-- 播放器 -->
         <section class="player" id="player">
           <div class="controls" id="controls" hidden>
-            <!-- Three buttons: Restart / Play / Volume -->
+            <!-- 三个按钮：重听 / 播放 / 音量 -->
             <div class="controls__row">
               <button class="btn-restart" id="restartBtn" type="button" aria-label="Restart">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -95,13 +95,13 @@
               </button>
             </div>
 
-            <!-- Progress bar -->
+            <!-- 进度条 -->
             <div class="progress" id="progress" role="slider" tabindex="0" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
               <div class="progress__fill" id="progressFill"></div>
               <div class="progress__thumb" id="progressThumb"></div>
             </div>
 
-            <!-- Time display -->
+            <!-- 时间显示 -->
             <div class="time">
               <span id="cur">0:00</span>
               <span class="time__sep">/</span>
@@ -115,7 +115,7 @@
           <p class="error" id="error" hidden>Failed to load. Please refresh.</p>
         </section>
 
-        <!-- Note -->
+        <!-- 寄语 -->
         <p class="note" id="note" hidden></p>
       </div>
     </div>
@@ -126,7 +126,8 @@
   <!-- Theme switching is handled by themeSwitch.js (imported in main.js) -->
   <script>
     window.addEventListener('DOMContentLoaded', () => {
-      // Fullscreen button
+
+      // 全屏按钮
       const fullscreenBtn = document.getElementById('fullscreenBtn');
       if (fullscreenBtn) {
         fullscreenBtn.onclick = () => {
@@ -140,7 +141,8 @@
         };
       }
 
-      // Fullscreen state change
+      // ESC 键退出全屏（浏览器原生支持，无需额外代码）
+      // 全屏状态变化时更新按钮图标
       document.addEventListener('fullscreenchange', () => {
         if (fullscreenBtn) {
           if (document.fullscreenElement) {
@@ -153,19 +155,19 @@
         }
       });
 
-      // Keyboard shortcuts (Playback + Progress control)
-      // Note: Theme switching shortcuts are handled in themeSwitch.js
+      // 键盘快捷键（播放控制 + 进度控制）
+      // 注意：主题切换快捷键在 themeSwitch.js 中处理
       document.addEventListener('keydown', (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-        // Space or Enter: Play/Pause
+        // 空格键或回车键：播放/暂停
         if ((e.key === ' ' || e.key === 'Enter') && !e.ctrlKey && !e.metaKey && !e.altKey) {
           e.preventDefault();
           const playBtn = document.getElementById('playBtn');
           if (playBtn) playBtn.click();
         }
 
-        // Arrow keys: Control progress (±5s)
+        // 左右方向键：控制播放进度（±5秒）
         if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
           e.preventDefault();
           const audio = document.getElementById('audio');
