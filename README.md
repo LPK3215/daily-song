@@ -1,124 +1,289 @@
+<div align="center">
+
+![Daily Song Banner](./docs/images/banner.svg)
+
 # Daily Song 🎵
 
-A minimalist "daily song" web page: automatically switches songs every day, visitors can listen instantly. Pure static frontend (no build tools, no backend), deployed on GitHub Pages.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub Pages](https://img.shields.io/badge/demo-live-success)](https://lpk3215.github.io/daily-song/)
+[![Pure Static](https://img.shields.io/badge/build-none-blue)](https://github.com/LPK3215/daily-song)
+[![PWA Ready](https://img.shields.io/badge/PWA-ready-purple)](https://github.com/LPK3215/daily-song)
+[![Code Size](https://img.shields.io/badge/code-~2.1k%20lines-informational)](https://github.com/LPK3215/daily-song)
 
-> Live demo: `https://<your-username>.github.io/daily-song/`
+**A minimalist "daily song" web player that automatically switches songs every day.**  
+Pure static frontend • Zero build tools • Zero backend • GitHub Pages ready
 
-## Features
+[🎵 Live Demo](https://lpk3215.github.io/daily-song/) • [📖 Documentation](#documentation) • [🚀 Quick Start](#quick-start) • [🤝 Contributing](./CONTRIBUTING.md)
 
-- **Date-based scheduling**: Arrange songs by date via `data/date-songs.json`, plan days or weeks ahead.
-- **Three audio sources**: Local mp3 (`local`) / Direct URL (`url`) / Platform embed (`embed`).
-- **Custom player**: Large play button + draggable progress bar + time display (`local`/`url` modes).
-- **Zero dependencies, modular**: Native ES Modules + responsibility-based CSS splitting, no frameworks, no bundlers.
-- Mobile-first, frosted glass cards, automatic dark mode.
+</div>
 
-## Directory Structure
+---
+
+## ✨ Features
+
+- **📅 Date-based Scheduling**: Arrange songs by date via `data/date-songs.json`, plan days or weeks ahead
+- **🎵 Three Audio Sources**: Local MP3 / Direct URL / Platform embed (YouTube, Bilibili, Spotify, etc.)
+- **🎮 Custom Player**: Large play button + draggable progress bar + time display + keyboard shortcuts
+- **🎨 Dual Theme System**: 4 backgrounds × 7 accent colors = 28 theme combinations
+- **⚡ Zero Dependencies**: Native ES Modules + vanilla JavaScript, no frameworks or bundlers
+- **📱 Mobile-First**: Responsive design with frosted glass cards and smooth animations
+- **🌐 PWA Ready**: Installable to home screen, works offline with Service Worker
+- **♿ Accessible**: Full keyboard navigation, ARIA labels, semantic HTML
+
+## 🎹 Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `Space` / `Enter` | Play / Pause |
+| `←` / `→` | Seek backward / forward 5 seconds |
+| `T` | Switch accent color theme |
+| `B` | Switch background theme |
+| `ESC` | Exit fullscreen |
+
+---
+
+## 🏗️ Architecture
+
+![Architecture Diagram](./docs/images/architecture.svg)
+
+### Project Structure
 
 ```
 daily-song/
-├── index.html              # Entry point (required at root for GitHub Pages)
+├── index.html              # Entry point (GitHub Pages)
 ├── assets/
-│   ├── css/                # Styles (split by responsibility)
-│   │   ├── base.css        #   Reset + theme variables + background
-│   │   ├── card.css        #   Card / cover / info / note
-│   │   ├── player.css      #   Custom player / progress bar / embed
-│   │   └── theme.css       #   Dark mode
-│   ├── js/                 # Scripts (native ES modules)
-│   │   ├── main.js         #   Entry point, orchestrates modules
-│   │   ├── config.js       #   Constants
-│   │   ├── utils.js        #   formatDate / formatTime / $
-│   │   ├── dataLoader.js   #   Load default-songs.json
-│   │   ├── songSelector.js #   Select song by date
-│   │   ├── activeSongLoader.js # Load date-songs.json (date matching, priority)
-│   │   ├── render.js       #   Cover / info / note / error
-│   │   ├── audioPlayer.js  #   Custom player (local/url)
-│   │   ├── embedPlayer.js  #   iframe (embed)
-│   │   └── themeSwitch.js  #   Theme switching
-│   └── pwa/                # PWA files
-│       ├── manifest.json   #   App manifest
-│       └── sw.js           #   Service worker
-├── data/
-│   ├── date-songs.json     # [CORE] Schedule songs by date (can plan ahead)
-│   └── default-songs.json  # Song library (date-based rotation, fallback)
-├── media/
-│   ├── audio/              # Self-hosted mp3
-│   └── covers/             # Cover images (optional)
-├── README.md
-├── LICENSE
-└── .gitignore
+│   ├── css/                # Modular stylesheets (~800 lines)
+│   │   ├── base.css        #   Reset + theme variables + star background
+│   │   ├── card.css        #   Card layout + cover + song info
+│   │   ├── player.css      #   Player controls + progress bar
+│   │   └── theme.css       #   Theme system (4 × 7 combinations)
+│   ├── js/                 # ES Modules (~1300 lines)
+│   │   ├── main.js         #   Entry point, orchestrates all modules
+│   │   ├── config.js       #   Global constants
+│   │   ├── utils.js        #   Date/time formatting utilities
+│   │   ├── activeSongLoader.js # Load date-scheduled songs
+│   │   ├── songSelector.js #   Select song from rotation list
+│   │   ├── audioPlayer.js  #   Custom HTML5 audio player
+│   │   ├── embedPlayer.js  #   Platform iframe embed player
+│   │   ├── render.js       #   DOM rendering and animations
+│   │   ├── themeSwitch.js  #   Theme switching logic
+│   │   ├── dataLoader.js   #   JSON data loading
+│   │   └── keyboard.js     #   Keyboard shortcut handlers
+│   └── pwa/                # Progressive Web App files
+│       ├── manifest.json   #   App manifest for installation
+│       └── sw.js           #   Service Worker for offline mode
+├── data/                   # Configuration (JSON)
+│   ├── date-songs.json     #   [Priority] Date-to-song mapping
+│   └── default-songs.json  #   [Fallback] Rotation song list
+├── media/                  # Media assets
+│   ├── audio/              #   Self-hosted MP3 files
+│   └── covers/             #   Album cover images
+├── docs/                   # Documentation assets
+│   ├── images/             #   SVG diagrams and banners
+│   └── scripts/            #   SVG generation scripts
+├── README.md               # This file
+├── LICENSE                 # MIT License
+├── CONTRIBUTING.md         # Contribution guidelines
+├── CHANGELOG.md            # Version history
+├── CODE_OF_CONDUCT.md      # Community guidelines
+├── .gitignore              # Git ignore rules
+└── .gitattributes          # Line ending rules
 ```
 
-> Separation of concerns: **Presentation** (css) / **Behavior** (js) / **Data** (data) / **Media** (media) are organized separately, with only `index.html` at root.
+---
 
-## Local Preview
+## 🚀 Quick Start
 
-This project uses native ES modules + `fetch`, **double-clicking `index.html` (`file://` protocol) will be blocked by browsers**. Please start a local static server:
+### Prerequisites
+
+A static file server (any one):
+- Python 3: `python -m http.server 8080`
+- Node.js: `npx serve .`
+- PHP: `php -S localhost:8080`
+
+> ⚠️ Double-clicking `index.html` won't work due to ES Modules requiring HTTP protocol.
+
+### Local Preview
 
 ```bash
-# Choose one
-python -m http.server 8000
-npx serve .
+# Clone the repository
+git clone https://github.com/LPK3215/daily-song.git
+cd daily-song
+
+# Start local server (choose one)
+python -m http.server 8080   # Python
+npx serve .                  # Node.js
+
+# Open browser
+open http://localhost:8080
 ```
 
-Then open <http://localhost:8000>.
+### Deploy to GitHub Pages
 
-## How to Schedule Songs (Daily Operations)
+1. Fork or clone this repository
+2. Push to your GitHub account
+3. Go to **Settings** → **Pages**
+4. Select **Source**: `main` branch, `/` (root)
+5. Wait for deployment (~1-2 minutes)
+6. Visit `https://<your-username>.github.io/daily-song/`
 
-**Just edit one file: `data/date-songs.json`**. Use dates as keys, values are songs to play that day. System automatically matches by current date.
+---
+
+## 📝 Configuration
+
+### Song Scheduling
+
+Edit `data/date-songs.json` to schedule specific songs for specific dates:
 
 ```json
 {
-  "2026-06-13": ["Song Title", "Artist", "song.mp3"],
-  "2026-06-14": ["Tomorrow's Song", "Artist 2", "https://example.com/song.mp3", "cover.jpg", "Daily note"]
+  "2026-06-13": ["Song Title", "Artist Name", "song.mp3"],
+  "2026-06-14": ["Another Song", "Artist", "https://cdn.com/song.mp3", "cover.jpg"],
+  "2026-12-25": ["Christmas Song", "Artist", "xmas.mp3", "xmas.jpg", "Merry Christmas!"]
 }
 ```
 
-New simplified format:
-- Position 1: Song title (required)
-- Position 2: Artist (required)
-- Position 3: Audio file (required) - local filename or full URL
-- Position 4: Cover image (optional)
-- Position 5: Daily note (optional)
+**Array Format**:
+- `[0]` Song title (required)
+- `[1]` Artist name (required)
+- `[2]` Audio source (required) - local filename or full URL
+- `[3]` Cover image (optional) - local filename or full URL
+- `[4]` Daily note (optional) - displayed below song info
 
-**Loading priority**: `date-songs.json` (match by date) → `default-songs.json` (rotation fallback). Page works even without `date-songs.json`.
+### Rotation List
 
-## How to Add Songs (Expand Library)
-
-Edit `data/default-songs.json`, add entries to the `songs` array:
+Edit `data/default-songs.json` for daily rotation (used when date not in schedule):
 
 ```json
 {
   "anchor": "2026-06-13",
   "songs": [
     ["Song 1", "Artist 1", "song1.mp3"],
-    ["Song 2", "Artist 2", "https://cdn.com/song2.mp3", "cover2.jpg"],
-    ["Song 3", "Artist 3", "song3.mp3", "cover3.jpg", "Daily quote"]
+    ["Song 2", "Artist 2", "song2.mp3", "cover2.jpg"],
+    ["Song 3", "Artist 3", "song3.mp3", "cover3.jpg", "Daily inspiration"]
   ]
 }
 ```
 
-### ⚠️ Common Pitfalls
+**Loading Priority**: `date-songs.json` → `default-songs.json`
 
-- NetEase Music / QQ Music / YouTube **"copy link" gives webpage URLs with hotlink protection** → Can't use `url`, only `embed`.
-- `url` actually works for: Your own server's mp3, hotlink-friendly CDNs, archive.org, etc.
-- **Self-hosted audio = publicly downloadable**, static hosting can't prevent downloads.
-- **Deleting mp3 won't reduce repo size**: Files remain in git history, `.git` keeps growing. Use external links when possible; use git filter-repo / BFG to truly remove.
-- Single file hard limit: 100MB, repo recommended: < 1GB.
+### Audio Sources
 
-## Deploy to GitHub Pages
+| Type | Example | Notes |
+|------|---------|-------|
+| **Local** | `song.mp3` | Place in `media/audio/`, auto-prefixed |
+| **Direct URL** | `https://cdn.com/song.mp3` | Must support CORS and hotlinking |
+| **Embed** | `https://music.163.com/outchain/...` | Platform iframe player |
 
-1. Create repo `daily-song`, push code to `main` branch.
-2. Settings → Pages → Source: select `main` branch, root `/`.
-3. Wait for deployment, visit `https://<username>.github.io/daily-song/`.
+---
 
-## Keyboard Shortcuts
+## 🎨 Theme Customization
 
-- `Space` / `Enter` - Play/Pause
-- `←` / `→` - Seek backward/forward 5 seconds
-- `T` - Switch accent color
-- `B` - Switch background theme
-- `ESC` - Exit fullscreen
+The dual theme system provides 28 combinations:
 
-## License
+**Backgrounds** (Press `B`):
+- 🌑 Dark (default)
+- ☀️ Light
+- 🔥 Warm
+- 💜 Purple Night
 
-[MIT](./LICENSE)
+**Accent Colors** (Press `T`):
+- 💙 Neon Blue (default)
+- 💗 Cyber Pink
+- 💚 Electric Green
+- 🧡 Sunset Orange
+- 🩵 Neon Cyan
+- 💜 Violet
+- ❤️ Rose Red
+
+Themes persist in `localStorage` and sync across page reloads.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | Vanilla JavaScript (ES Modules) |
+| **Styles** | Pure CSS3 (Custom Properties) |
+| **Audio** | Native HTML5 `<audio>` API |
+| **PWA** | Service Worker + Web App Manifest |
+| **Build** | None (zero build tools) |
+| **Hosting** | GitHub Pages |
+| **Dependencies** | Zero npm packages |
+
+---
+
+## 📖 Documentation
+
+- [Contributing Guidelines](./CONTRIBUTING.md) - How to contribute
+- [Changelog](./CHANGELOG.md) - Version history
+- [Code of Conduct](./CODE_OF_CONDUCT.md) - Community guidelines
+- [Configuration Guide](./data/README.md) - Detailed config docs (Chinese)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guidelines](./CONTRIBUTING.md) first.
+
+### Development Workflow
+
+```bash
+# 1. Fork and clone
+git clone https://github.com/YOUR_USERNAME/daily-song.git
+
+# 2. Create feature branch
+git checkout -b feature/amazing-feature
+
+# 3. Make changes and test locally
+python -m http.server 8080
+
+# 4. Commit with conventional commits
+git commit -m "feat: add amazing feature"
+
+# 5. Push and create pull request
+git push origin feature/amazing-feature
+```
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE) file for details.
+
+---
+
+## 👤 Author
+
+**LPK3215**
+- GitHub: [@LPK3215](https://github.com/LPK3215)
+- Email: 17538703215@163.com
+- Project: [Daily Song](https://github.com/LPK3215/daily-song)
+
+---
+
+## 🌟 Acknowledgments
+
+- Design inspiration from modern music players
+- Icon font: Native SVG shapes
+- Background: Pure CSS star animation
+
+---
+
+## 📊 Project Stats
+
+- **Code Lines**: ~2,100 (JavaScript + CSS)
+- **Modules**: 11 ES Modules
+- **Themes**: 28 combinations (4 × 7)
+- **Zero**: Build time, dependencies, backend
+
+---
+
+<div align="center">
+
+**[⬆ Back to Top](#daily-song-)**
+
+Made with ❤️ by [LPK3215](https://github.com/LPK3215)
+
+</div>

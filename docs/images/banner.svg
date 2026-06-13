@@ -1,0 +1,49 @@
+<svg width="1200" height="300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="300" fill="url(#bg)"/>
+
+  <!-- Music Notes Decoration -->
+  <text x="50" y="80" font-size="60" fill="rgba(255,255,255,0.15)" font-family="Arial">♪</text>
+  <text x="1100" y="220" font-size="60" fill="rgba(255,255,255,0.15)" font-family="Arial">♫</text>
+  <text x="950" y="100" font-size="40" fill="rgba(255,255,255,0.1)" font-family="Arial">♬</text>
+
+  <!-- Main Title -->
+  <text x="600" y="120" font-family="'Arial Black', sans-serif" font-size="72" font-weight="bold" fill="#ffffff" text-anchor="middle" filter="url(#glow)">
+    Daily Song
+  </text>
+
+  <!-- Subtitle -->
+  <text x="600" y="170" font-family="Arial, sans-serif" font-size="24" fill="rgba(255,255,255,0.9)" text-anchor="middle">
+    One song a day, immersive music experience
+  </text>
+
+  <!-- Feature Tags -->
+  <g transform="translate(300, 220)">
+    <rect x="0" y="0" width="140" height="40" rx="20" fill="rgba(255,255,255,0.2)"/>
+    <text x="70" y="26" font-family="Arial" font-size="16" fill="#ffffff" text-anchor="middle">🎵 Pure Static</text>
+  </g>
+
+  <g transform="translate(460, 220)">
+    <rect x="0" y="0" width="140" height="40" rx="20" fill="rgba(255,255,255,0.2)"/>
+    <text x="70" y="26" font-family="Arial" font-size="16" fill="#ffffff" text-anchor="middle">🎨 PWA Ready</text>
+  </g>
+
+  <g transform="translate(620, 220)">
+    <rect x="0" y="0" width="160" height="40" rx="20" fill="rgba(255,255,255,0.2)"/>
+    <text x="80" y="26" font-family="Arial" font-size="16" fill="#ffffff" text-anchor="middle">⚡ Zero Build</text>
+  </g>
+</svg>

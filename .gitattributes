@@ -1,0 +1,25 @@
+# Enforce consistent line endings
+* text=auto
+
+# Source code
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+
+# Scripts
+*.bat text eol=crlf
+*.sh text eol=lf
+
+# Binary files
+*.mp3 binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary

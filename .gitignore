@@ -1,3 +1,9 @@
+# 隐藏目录（所有以点开头的目录）
+.*
+!.git
+!.gitignore
+!.gitattributes
+
 # 文件夹缓存
 .DS_Store
 Thumbs.db
@@ -9,3 +15,21 @@ Thumbs.db
 # 本地临时
 *.log
 .cache/
+*.backup
+
+# Python 相关
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Node.js (如果将来添加构建工具)
+node_modules/
+package-lock.json
+yarn.lock
+
+# 临时文件
+*.tmp
+*.swp
+*~

@@ -1,0 +1,72 @@
+<svg width="1000" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:0.1" />
+    </linearGradient>
+    <style>
+      .box { fill: url(#grad1); stroke: #667eea; stroke-width: 2; rx: 8; }
+      .title { font-family: 'Courier New', monospace; font-size: 16px; font-weight: bold; fill: #1a202c; }
+      .text { font-family: 'Courier New', monospace; font-size: 12px; fill: #4a5568; }
+      .arrow { stroke: #667eea; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#667eea" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="500" y="40" font-family="Arial" font-size="24" font-weight="bold" fill="#1a202c" text-anchor="middle">
+    Daily Song Architecture
+  </text>
+
+  <!-- Browser Layer -->
+  <rect class="box" x="50" y="80" width="900" height="100"/>
+  <text class="title" x="70" y="105">Browser Layer</text>
+  <text class="text" x="70" y="130">index.html + Native ES Modules</text>
+  <text class="text" x="70" y="150">PWA (Service Worker + Manifest)</text>
+
+  <!-- Application Layer -->
+  <rect class="box" x="50" y="220" width="280" height="180"/>
+  <text class="title" x="70" y="245">Application Core</text>
+  <text class="text" x="70" y="270">• main.js (entry)</text>
+  <text class="text" x="70" y="290">• activeSongLoader.js</text>
+  <text class="text" x="70" y="310">• songSelector.js</text>
+  <text class="text" x="70" y="330">• render.js</text>
+  <text class="text" x="70" y="350">• themeSwitch.js</text>
+  <text class="text" x="70" y="370">• utils.js</text>
+
+  <rect class="box" x="360" y="220" width="280" height="180"/>
+  <text class="title" x="380" y="245">Player Modules</text>
+  <text class="text" x="380" y="270">• audioPlayer.js</text>
+  <text class="text" x="380" y="290">  - Custom controls</text>
+  <text class="text" x="380" y="310">  - Progress bar</text>
+  <text class="text" x="380" y="330">  - Keyboard shortcuts</text>
+  <text class="text" x="380" y="350">• embedPlayer.js</text>
+  <text class="text" x="380" y="370">  - Platform iframes</text>
+
+  <rect class="box" x="670" y="220" width="280" height="180"/>
+  <text class="title" x="690" y="245">UI & Styles</text>
+  <text class="text" x="690" y="270">• base.css (themes)</text>
+  <text class="text" x="690" y="290">• card.css (layout)</text>
+  <text class="text" x="690" y="310">• player.css (controls)</text>
+  <text class="text" x="690" y="330">• theme.css (colors)</text>
+  <text class="text" x="690" y="350">4 backgrounds × 7 accents</text>
+
+  <!-- Data Layer -->
+  <rect class="box" x="50" y="440" width="420" height="100"/>
+  <text class="title" x="70" y="465">Configuration Data</text>
+  <text class="text" x="70" y="490">• date-songs.json (scheduled)</text>
+  <text class="text" x="70" y="510">• default-songs.json (rotation)</text>
+
+  <rect class="box" x="530" y="440" width="420" height="100"/>
+  <text class="title" x="550" y="465">Media Assets</text>
+  <text class="text" x="550" y="490">• media/audio/*.mp3</text>
+  <text class="text" x="550" y="510">• media/covers/*.jpg</text>
+
+  <!-- Arrows -->
+  <path class="arrow" d="M 500 180 L 500 220"/>
+  <path class="arrow" d="M 190 400 L 190 440"/>
+  <path class="arrow" d="M 500 400 L 500 440"/>
+  <path class="arrow" d="M 810 400 L 810 440"/>
+</svg>
