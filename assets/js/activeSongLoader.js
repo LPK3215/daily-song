@@ -11,6 +11,19 @@ import { formatDateKey } from "./utils.js";
 
 const SCHEDULE_URL = "data/schedule.json";
 
+/** 从 URL 参数读取预览日期，返回格式化的日期键；无参数则返回当天 */
+function getTargetDateKey() {
+  const params = new URLSearchParams(window.location.search);
+  const dateParam = params.get("date");
+  if (dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
+    const d = new Date(dateParam + "T00:00:00");
+    if (!isNaN(d.getTime())) {
+      return formatDateKey(d);
+    }
+  }
+  return formatDateKey(new Date());
+}
+
 /** 校验歌曲条目合法性 */
 function isValidEntry(obj) {
   if (!obj || typeof obj !== "object") return false;
@@ -33,17 +46,19 @@ function normalizeEntry(entry) {
 
 /**
  * 加载当前应播放的歌曲对象
+ * 支持 ?date=YYYY-MM-DD 预览指定日期歌曲
  * @returns {Promise<object>} { title, artist, source, src, cover, note }
  */
 export async function loadActiveSong() {
-  // 1. 读取 schedule.json，按当天日期精确匹配
+  const targetKey = getTargetDateKey();
+
+  // 1. 读取 schedule.json，按目标日期精确匹配
   let entry = null;
   try {
     const res = await fetch(`${SCHEDULE_URL}?t=${Date.now()}`, { cache: "no-store" });
     if (res.ok) {
       const schedule = await res.json();
-      const todayKey = formatDateKey(new Date());
-      const matched = schedule[todayKey];
+      const matched = schedule[targetKey];
       if (isValidEntry(matched)) {
         entry = matched;
       }

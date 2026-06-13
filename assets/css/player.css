@@ -1,182 +1,515 @@
-/* player.css —— 自定义播放器 / 进度条 / embed / 错误 */
+/* player.css - 中央圆形播放器控制（宽屏控制器） */
 
 .player {
-  margin-top: 22px;
-  animation: fadeIn 0.5s 0.35s ease-out both;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  width: 100%;
+  max-width: 900px;
 }
 
+/* 控制器容器 */
 .controls {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
+  gap: 32px;
+  width: 100%;
 }
 
-/* ===== 按钮行 ===== */
+/* 按钮行 */
 .controls__row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: 80px; /* 按钮之间间距加大 */
 }
 
-/* ===== 重新开始按钮 ===== */
-.btn {
-  border: none;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  transition: transform 0.18s ease, background 0.2s ease, box-shadow 0.2s ease;
-}
-.btn--ghost {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  color: var(--accent);
-  background: rgba(108, 92, 231, 0.10);
-}
-.btn--ghost:hover  { background: rgba(108, 92, 231, 0.18); }
-.btn--ghost:active { transform: scale(0.9); }
-.btn--ghost svg {
-  width: 26px;
-  height: 26px;
-  fill: currentColor;
-}
-
-/* ===== 播放按钮 ===== */
-.play {
-  width: 64px;
-  height: 64px;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  color: #fff;
-  background: linear-gradient(135deg, var(--accent), #8b7cf0);
-  box-shadow:
-    0 8px 28px -8px var(--accent-glow),
-    0 2px 8px rgba(108, 92, 231, 0.15);
-  transition:
-    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.3s ease;
+/* === 中央播放按钮 === */
+.btn-play {
   position: relative;
-}
-
-/* 播放态光晕 */
-.play::after {
-  content: '';
-  position: absolute;
-  inset: -6px;
+  width: 96px;
+  height: 96px;
   border-radius: 50%;
-  background: transparent;
-  box-shadow: 0 0 0 0 var(--accent-glow);
-  transition: box-shadow 0.4s ease;
-}
-
-.play:hover {
-  transform: translateY(-3px);
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   box-shadow:
-    0 12px 34px -10px var(--accent-glow),
-    0 4px 12px rgba(108, 92, 231, 0.18);
+    0 0 40px var(--accent-glow),
+    0 0 80px var(--accent-glow),
+    inset 0 2px 20px rgba(255, 255, 255, 0.2);
+  transition: all 0.4s var(--ease-smooth);
+  overflow: visible;
 }
-.play:active { transform: scale(0.93); }
 
-.play svg {
-  width: 30px;
-  height: 30px;
+/* 播放按钮外圈光晕 */
+.btn-play::before {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.btn-play:hover {
+  transform: scale(1.05);
+  box-shadow:
+    0 0 60px var(--accent-glow),
+    0 0 120px rgba(99, 102, 241, 0.6),
+    inset 0 2px 20px rgba(255, 255, 255, 0.3);
+}
+
+.btn-play:hover::before {
+  opacity: 1;
+}
+
+.btn-play:active {
+  transform: scale(0.98);
+}
+
+/* 图标 - 只显示一个 */
+.btn-play svg {
+  width: 32px;
+  height: 32px;
+  fill: currentColor;
+  transition: opacity 0.2s ease;
+}
+
+.btn-play .icon-play {
+  margin-left: 3px;
+}
+
+/* 播放时隐藏播放图标，显示暂停图标 */
+.btn-play .icon-play[hidden],
+.btn-play .icon-pause[hidden] {
+  display: none;
+}
+
+.btn-play[aria-label="Pause"] .icon-play {
+  display: none;
+}
+
+.btn-play[aria-label="Play"] .icon-pause {
+  display: none;
+}
+
+/* 播放时的脉冲动画 */
+.btn-play[aria-label="暂停"]::after {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* === 重听按钮 === */
+.btn-restart {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--btn-bg);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--btn-border);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s var(--ease-smooth);
+}
+
+.btn-restart:hover {
+  background: var(--btn-bg-hover);
+  color: var(--text-primary);
+  border-color: var(--btn-border-hover);
+  cursor: pointer;
+}
+
+.volume-slider[orient="vertical"] {
+  -webkit-appearance: slider-vertical;
+}
+
+/* Webkit 浏览器滑块圆点 */
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 16px var(--accent-glow);
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 24px var(--accent-glow);
+}
+
+/* Firefox 浏览器滑块圆点 */
+.volume-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 16px var(--accent-glow);
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.volume-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 24px var(--accent-glow);
+}
+
+/* Firefox 进度填充 */
+.volume-slider::-moz-range-progress {
+  background: linear-gradient(to top, var(--accent), var(--accent-secondary));
+  border-radius: var(--radius-full);
+}
+
+/* === 音量按钮 === */
+.btn-volume {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--btn-bg);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--btn-border);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s var(--ease-smooth);
+}
+
+.btn-volume:hover {
+  background: var(--btn-bg-hover);
+  color: var(--text-primary);
+  border-color: var(--btn-border-hover);
+  transform: scale(1.05);
+}
+
+.btn-volume:active {
+  transform: scale(0.95);
+}
+
+.btn-volume svg {
+  width: 24px;
+  height: 24px;
   fill: currentColor;
 }
 
-/* 播放时呼吸光晕（利用 aria-label 属性，JS 已管理） */
-.play[aria-label="暂停"]::after {
-  animation: playGlow 2s ease-in-out infinite;
-}
-.play[aria-label="暂停"] {
-  box-shadow:
-    0 10px 30px -8px var(--accent-glow),
-    0 3px 10px rgba(108, 92, 231, 0.2);
+/* 音量图标切换 */
+.btn-volume .icon-muted {
+  display: none;
 }
 
-@keyframes playGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(108, 92, 231, 0.25); }
-  50%      { box-shadow: 0 0 0 14px rgba(108, 92, 231, 0); }
+.btn-volume.is-muted .icon-volume {
+  display: none;
 }
 
-/* ===== 进度条 ===== */
+.btn-volume.is-muted .icon-muted {
+  display: block;
+}
+
+/* === 音量滑块 === */
+.volume-control {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+}
+
+.volume-slider {
+  width: 200px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--progress-bg);
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: all 0.2s ease;
+}
+
+.volume-slider:hover {
+  height: 8px;
+}
+
+/* Webkit浏览器 */
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 12px var(--accent-glow);
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+/* Firefox浏览器 */
+.volume-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  box-shadow: 0 0 12px var(--accent-glow);
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.volume-slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+/* 已填充部分的颜色 */
+.volume-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+}
+
+.volume-slider::-moz-range-track {
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--progress-bg);
+}
+
+.volume-slider::-moz-range-progress {
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+}
+
+/* === 进度条（加宽） === */
 .progress {
   position: relative;
   width: 100%;
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(120, 100, 180, 0.18);
+  height: 8px;
+  background: var(--progress-bg);
+  border-radius: var(--radius-full);
   cursor: pointer;
-  touch-action: none;
-  transition: height 0.15s ease;
+  overflow: visible;
+  transition: all 0.2s ease;
 }
-.progress:hover { height: 9px; }
+
+.progress:hover {
+  height: 10px;
+}
+
+/* 拖动时加粗 */
+.progress:active {
+  height: 12px;
+}
 
 .progress__fill {
   position: absolute;
-  left: 0; top: 0;
+  left: 0;
+  top: 0;
   height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+  border-radius: var(--radius-full);
   width: 0%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-soft));
-  transition: height 0.15s ease;
+  box-shadow: 0 0 20px var(--accent-glow);
+  transition: width 0.1s linear;
+  pointer-events: none;
 }
 
 .progress__thumb {
   position: absolute;
   top: 50%;
   left: 0%;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: #fff;
-  border: 2.5px solid var(--accent);
-  transform: translate(-50%, -50%);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-  transition: width 0.15s ease, height 0.15s ease;
-}
-.progress:hover .progress__thumb {
   width: 18px;
   height: 18px;
+  background: var(--accent);
+  border: 3px solid #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  box-shadow:
+    0 0 20px var(--accent-glow),
+    0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s var(--ease-smooth);
+  pointer-events: none;
+}
+
+.progress:hover .progress__thumb,
+.progress:focus-visible .progress__thumb {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.progress:active .progress__thumb {
+  transform: translate(-50%, -50%) scale(1.3);
+  box-shadow:
+    0 0 32px var(--accent-glow),
+    0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .progress:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 5px;
-  border-radius: 999px;
+  outline-offset: 4px;
 }
 
-/* ===== 时间 ===== */
+/* === 时间显示 === */
 .time {
-  font-size: 12.5px;
-  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 15px; /* 字号稍大 */
+  font-weight: 500;
+  color: var(--text-tertiary);
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.5px;
-  margin-top: -6px;
+  letter-spacing: 0.08em;
+  padding: 0 12px; /* 左右留白 */
 }
 
-/* ===== embed 外链 ===== */
+.time__sep {
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+#cur {
+  color: var(--accent);
+}
+
+/* === Embed 播放器 === */
 .embed {
   width: 100%;
-  animation: fadeIn 0.5s 0.35s ease-out both;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
 }
+
 .embed iframe {
   width: 100%;
+  height: 120px;
   border: none;
-  border-radius: var(--radius-sm);
+  display: block;
 }
 
-/* ===== 错误提示 ===== */
+/* === 错误提示 === */
 .error {
-  font-size: 14.5px;
-  color: #d64045;
-  padding: 12px 0 4px;
-  letter-spacing: 0.2px;
-  animation: fadeIn 0.4s ease-out both;
+  padding: 16px 24px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 12px;
+  color: #fca5a5;
+  font-size: 14px;
+  text-align: center;
 }
 
+/* Audio 隐藏 */
+#audio {
+  display: none;
+}
 
+/* 响应式 */
+@media (max-width: 968px) {
+  .player {
+    max-width: 700px; /* 平板缩小 */
+  }
+
+  .controls__row {
+    gap: 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .player {
+    gap: 24px;
+    max-width: 500px;
+  }
+
+  .controls {
+    gap: 24px;
+  }
+
+  .controls__row {
+    gap: 40px;
+  }
+
+  .btn-play {
+    width: 80px;
+    height: 80px;
+  }
+
+  .btn-play svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .btn-restart {
+    width: 48px;
+    height: 48px;
+  }
+
+  .btn-restart svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .player {
+    max-width: 400px;
+  }
+
+  .controls__row {
+    gap: 24px;
+  }
+
+  .btn-play {
+    width: 72px;
+    height: 72px;
+  }
+
+  .btn-play svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .btn-restart {
+    width: 44px;
+    height: 44px;
+  }
+
+  .time {
+    font-size: 12px;
+    padding: 0 4px;
+  }
+}

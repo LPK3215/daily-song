@@ -1,9 +1,11 @@
 /* utils.js —— 通用工具 */
 export const $ = (id) => document.getElementById(id);
 
-/** 6月13日 */
+/** June 13 */
 export function formatDate(d) {
-  return `${d.getMonth() + 1}月${d.getDate()}日`;
+  const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                  'July', 'August', 'September', 'October', 'November', 'December'];
+  return `${months[d.getMonth()]} ${d.getDate()}`;
 }
 
 /** 2026-06-13（用于 schedule.json 日期键） */

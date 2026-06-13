@@ -1,0 +1,18 @@
+{
+  "name": "每日一歌",
+  "short_name": "每日一歌",
+  "description": "每天一首，点开即听。",
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a1528",
+  "theme_color": "#1a1528",
+  "icons": [
+    {
+      "src": "media/covers/og.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
