@@ -1,0 +1,19 @@
+- main [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]: 每日一歌
+    - generic [ref=e5]: ·
+    - generic [ref=e6]: 6月13日
+  - generic [ref=e8]: 🎵
+  - generic [ref=e9]:
+    - heading "空白" [level=1] [ref=e10]
+    - paragraph [ref=e11]: 佚名
+  - generic [ref=e13]:
+    - generic [ref=e14]:
+      - button "重新开始" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+      - button "播放" [ref=e18] [cursor=pointer]:
+        - img [ref=e19]
+        - img [ref=e21]
+    - slider "进度" [ref=e23] [cursor=pointer]
+    - generic [ref=e25]: 0:00 / 0:00
+  - text: “”
