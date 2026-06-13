@@ -1,26 +1,19 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>每日一歌</title>
-  <meta name="description" content="每日一歌 —— 每天一首，点开即听。" />
+  <title>Daily Song</title>
+  <meta name="description" content="Daily Song - Immersive music experience, one song a day." />
 
-  <!-- Open Graph / 分享卡片 -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="每日一歌" />
-  <meta property="og:description" content="每天一首，点开即听。" />
-  <meta property="og:image" content="media/covers/og.jpg" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.82em' font-size='78'>♫</text></svg>" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#000000" />
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>" />
-
-  <!-- 衬线字体：标题用 -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
-  <!-- 样式按职责拆分，顺序：基础 → 卡片 → 播放器 → 主题 -->
   <link rel="stylesheet" href="assets/css/base.css" />
   <link rel="stylesheet" href="assets/css/card.css" />
   <link rel="stylesheet" href="assets/css/player.css" />
@@ -28,65 +21,177 @@
 </head>
 <body>
   <main class="card" id="card" aria-live="polite">
-    <header class="card__head">
-      <span class="card__brand">每日一歌</span>
-      <span class="card__dot">·</span>
-      <span class="card__date" id="date">——</span>
-    </header>
+    <!-- 左上角：主题切换按钮 -->
+    <button class="bg-btn" id="bgBtn" type="button" aria-label="Switch background" title="Switch background (Press B)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5"/>
+        <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+      </svg>
+    </button>
 
-    <!-- 封面 -->
-    <div class="cover" id="cover">
-      <div class="cover__fallback" id="coverFallback" aria-hidden="true">🎵</div>
-    </div>
+    <!-- 强调色主题切换按钮 -->
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch accent" title="Switch accent color (Press T)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5"/>
+        <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+      </svg>
+    </button>
 
-    <!-- 歌曲信息 -->
-    <div class="meta">
-      <h1 class="meta__title" id="title">加载中…</h1>
-      <p class="meta__artist" id="artist"></p>
-    </div>
+    <!-- 右上角：全屏按钮 -->
+    <button class="fullscreen-btn" id="fullscreenBtn" type="button" aria-label="Fullscreen" title="Fullscreen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+      </svg>
+    </button>
 
-    <!-- 播放区：local/url 用自定义控件；embed 用 iframe -->
-    <section class="player" id="player">
-      <!-- 自定义控件（local / url） -->
-      <div class="controls" id="controls" hidden>
-        <div class="controls__row">
-          <button class="btn btn--ghost" id="restartBtn" type="button" aria-label="重新开始">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
-          </button>
-          <button class="play" id="playBtn" type="button" aria-label="播放">
-            <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-            <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-          </button>
+    <div class="card__layout">
+      <!-- 圆形转盘封面 -->
+      <div class="card__cover-col">
+        <div class="cover" id="cover">
+          <div class="cover__fallback" id="coverFallback" aria-hidden="true">
+            <span class="cover__note">♪</span>
+          </div>
         </div>
-        <div class="progress" id="progress" role="slider" tabindex="0"
-             aria-label="进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-          <div class="progress__fill" id="progressFill"></div>
-          <div class="progress__thumb" id="progressThumb"></div>
-        </div>
-        <div class="time"><span id="cur">0:00</span> / <span id="dur">0:00</span></div>
-
-        <!-- 音波可视化（纯 CSS 动画，播放时激活） -->
-        <div class="soundwave" aria-hidden="true">
-          <span style="--i:0"></span><span style="--i:1"></span><span style="--i:2"></span>
-          <span style="--i:3"></span><span style="--i:4"></span><span style="--i:5"></span>
-          <span style="--i:6"></span><span style="--i:7"></span><span style="--i:8"></span>
-          <span style="--i:9"></span><span style="--i:10"></span><span style="--i:11"></span>
-        </div>
-        <audio id="audio" preload="metadata"></audio>
       </div>
 
-      <!-- 平台外链（embed） -->
-      <div class="embed" id="embed" hidden></div>
+      <!-- 内容区域 -->
+      <div class="card__content-col">
+        <!-- Daily Song + 日期 -->
+        <header class="card__head">
+          <span class="card__brand">Daily Song</span>
+          <span class="card__date" id="date">--</span>
+        </header>
 
-      <!-- 错误兜底 -->
-      <p class="error" id="error" hidden>今日歌曲加载失败 😢</p>
-    </section>
+        <!-- 歌曲信息 -->
+        <div class="meta">
+          <h1 class="meta__title" id="title">Loading...</h1>
+          <p class="meta__artist" id="artist"></p>
+        </div>
 
-    <!-- 今日寄语 -->
-    <p class="note" id="note" hidden></p>
+        <!-- 播放器 -->
+        <section class="player" id="player">
+          <div class="controls" id="controls" hidden>
+            <!-- 三个按钮：重听 / 播放 / 音量 -->
+            <div class="controls__row">
+              <button class="btn-restart" id="restartBtn" type="button" aria-label="Restart">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                </svg>
+              </button>
+
+              <button class="btn-play" id="playBtn" type="button" aria-label="Play">
+                <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 5h4v14H6zM14 5h4v14h-4z" />
+                </svg>
+              </button>
+
+              <button class="btn-volume" id="volumeBtn" type="button" aria-label="Volume">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- 进度条 -->
+            <div class="progress" id="progress" role="slider" tabindex="0" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="progress__fill" id="progressFill"></div>
+              <div class="progress__thumb" id="progressThumb"></div>
+            </div>
+
+            <!-- 时间显示 -->
+            <div class="time">
+              <span id="cur">0:00</span>
+              <span class="time__sep">/</span>
+              <span id="dur">0:00</span>
+            </div>
+
+            <audio id="audio" preload="metadata"></audio>
+          </div>
+
+          <div class="embed" id="embed" hidden></div>
+          <p class="error" id="error" hidden>Failed to load. Please refresh.</p>
+        </section>
+
+        <!-- 寄语 -->
+        <p class="note" id="note" hidden></p>
+      </div>
+    </div>
   </main>
 
-  <!-- ES 模块入口 -->
   <script type="module" src="assets/js/main.js"></script>
+
+  <!-- 主题切换内联脚本 -->
+  <script>
+    const accentThemes = ['blue', 'pink', 'cyan', 'green', 'orange', 'violet', 'rose'];
+    let accentIndex = 0;
+    const bgThemes = ['dark', 'light', 'warm', 'purple'];
+    let bgIndex = 0;
+
+    const savedAccent = localStorage.getItem('accent-theme');
+    const savedBg = localStorage.getItem('bg-theme');
+    if (savedAccent && accentThemes.includes(savedAccent)) {
+      document.body.setAttribute('data-accent', savedAccent);
+      accentIndex = accentThemes.indexOf(savedAccent);
+    }
+    if (savedBg && bgThemes.includes(savedBg)) {
+      document.body.setAttribute('data-bg', savedBg);
+      bgIndex = bgThemes.indexOf(savedBg);
+    }
+
+    function switchAccent() {
+      accentIndex = (accentIndex + 1) % accentThemes.length;
+      const newTheme = accentThemes[accentIndex];
+      document.body.setAttribute('data-accent', newTheme);
+      localStorage.setItem('accent-theme', newTheme);
+    }
+
+    function switchBg() {
+      bgIndex = (bgIndex + 1) % bgThemes.length;
+      const newTheme = bgThemes[bgIndex];
+      document.body.setAttribute('data-bg', newTheme);
+      localStorage.setItem('bg-theme', newTheme);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const accentBtn = document.getElementById('themeBtn');
+      const bgBtn = document.getElementById('bgBtn');
+      if (accentBtn) accentBtn.onclick = switchAccent;
+      if (bgBtn) bgBtn.onclick = switchBg;
+
+      // 全屏按钮
+      const fullscreenBtn = document.getElementById('fullscreenBtn');
+      if (fullscreenBtn) {
+        fullscreenBtn.onclick = () => {
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+          } else {
+            document.exitFullscreen();
+          }
+        };
+      }
+
+      // 键盘快捷键
+      document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.key.toLowerCase() === 't' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          e.preventDefault();
+          switchAccent();
+        }
+        if (e.key.toLowerCase() === 'b' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          e.preventDefault();
+          switchBg();
+        }
+      });
+    });
+  </script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(() => { });
+    }
+  </script>
 </body>
 </html>
