@@ -58,11 +58,15 @@ export function setupAudioPlayer(song) {
     audio.play().catch(() => showError("Browser blocked playback. Please click again."));
   });
 
-  /* ===== Volume button: toggle mute ===== */
-  volumeBtn.addEventListener("click", () => {
-    audio.muted = !audio.muted;
+  /* ===== Volume: mute/unmute toggle ===== */
+  function updateVolIcon() {
     volumeBtn.classList.toggle("is-muted", audio.muted);
     volumeBtn.setAttribute("aria-label", audio.muted ? "Unmute" : "Mute");
+  }
+
+  volumeBtn.addEventListener("click", () => {
+    audio.muted = !audio.muted;
+    updateVolIcon();
   });
 
   /* ===== Audio error ===== */

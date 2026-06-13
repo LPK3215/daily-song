@@ -29,7 +29,6 @@ export function initThemeSwitcher() {
     const newTheme = accentThemes[accentIndex];
     document.body.setAttribute('data-accent', newTheme);
     localStorage.setItem('accent-theme', newTheme);
-    showThemeToast('accent', newTheme);
   }
 
   // Background theme switch
@@ -38,7 +37,6 @@ export function initThemeSwitcher() {
     const newTheme = bgThemes[bgIndex];
     document.body.setAttribute('data-bg', newTheme);
     localStorage.setItem('bg-theme', newTheme);
-    showThemeToast('bg', newTheme);
   }
 
   // Button click handlers
@@ -73,65 +71,6 @@ export function initThemeSwitcher() {
   // Show keyboard shortcuts hint on first visit
   setTimeout(() => {
     showKeyboardHint();
-  }, 2000);
-}
-
-function showThemeToast(type, theme) {
-  const accentNames = {
-    blue: 'Neon Blue',
-    pink: 'Cyber Pink',
-    cyan: 'Neon Cyan',
-    green: 'Electric Green',
-    orange: 'Sunset Orange',
-    violet: 'Violet',
-    rose: 'Rose Red'
-  };
-
-  const bgNames = {
-    dark: 'Dark',
-    light: 'Light',
-    warm: 'Warm',
-    purple: 'Purple Night'
-  };
-
-  // Remove old toast
-  const old = document.querySelector('.theme-toast');
-  if (old) old.remove();
-
-  // Create new toast
-  const toast = document.createElement('div');
-  toast.className = 'theme-toast';
-
-  if (type === 'accent') {
-    toast.textContent = `Accent: ${accentNames[theme]}`;
-  } else {
-    toast.textContent = `Background: ${bgNames[theme]}`;
-  }
-
-  toast.style.cssText = `
-    position: fixed;
-    top: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.85);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    z-index: 9999;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    animation: toastIn 0.3s ease;
-  `;
-
-  document.body.appendChild(toast);
-
-  // Auto-remove after 2 seconds
-  setTimeout(() => {
-    toast.style.animation = 'toastOut 0.3s ease';
-    setTimeout(() => toast.remove(), 300);
   }, 2000);
 }
 
@@ -183,13 +122,13 @@ function showKeyboardHint() {
   }, 8000);
 }
 
-// Add animation styles
+// Add animation styles for keyboard hint
 const style = document.createElement('style');
 style.textContent = `
   @keyframes toastIn {
     from {
       opacity: 0;
-      transform: translateY(-20px);
+      transform: translateY(20px);
     }
     to {
       opacity: 1;
@@ -203,7 +142,7 @@ style.textContent = `
     }
     to {
       opacity: 0;
-      transform: translateY(-20px);
+      transform: translateY(20px);
     }
   }
   kbd {

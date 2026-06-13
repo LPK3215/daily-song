@@ -21,7 +21,7 @@
 <body>
   <main class="card" id="card" aria-live="polite">
     <!-- Left corner: Background switch button -->
-    <button class="bg-btn" id="bgBtn" type="button" aria-label="Switch background" title="Switch background (Press B)">
+    <button class="bg-btn" id="bgBtn" type="button" aria-label="Switch background">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="5"/>
         <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
@@ -29,7 +29,7 @@
     </button>
 
     <!-- Accent theme switch button -->
-    <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch accent" title="Switch accent color (Press T)">
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch accent color">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="12" cy="12" r="3"/>
         <path d="M12 1v4m0 14v4M4.22 4.22l2.83 2.83m9.9 9.9l2.83 2.83M1 12h4m14 0h4M4.22 19.78l2.83-2.83m9.9-9.9l2.83-2.83"/>
@@ -37,7 +37,7 @@
     </button>
 
     <!-- Right corner: Fullscreen button -->
-    <button class="fullscreen-btn" id="fullscreenBtn" type="button" aria-label="Fullscreen" title="Fullscreen">
+    <button class="fullscreen-btn" id="fullscreenBtn" type="button" aria-label="Fullscreen">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
       </svg>
@@ -74,7 +74,7 @@
             <div class="controls__row">
               <button class="btn-restart" id="restartBtn" type="button" aria-label="Restart">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                  <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" fill="currentColor"/>
                 </svg>
               </button>
 
@@ -87,9 +87,13 @@
                 </svg>
               </button>
 
-              <button class="btn-volume" id="volumeBtn" type="button" aria-label="Volume">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
+              <button class="btn-volume" id="volumeBtn" type="button" aria-label="Mute">
+                <svg class="icon-volume" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                </svg>
+                <svg class="icon-muted" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 9v6h4l5 5V4L7 9H3z"/>
+                  <line x1="1" y1="1" x2="23" y2="23" />
                 </svg>
               </button>
             </div>
@@ -144,10 +148,8 @@
         if (fullscreenBtn) {
           if (document.fullscreenElement) {
             fullscreenBtn.setAttribute('aria-label', 'Exit fullscreen');
-            fullscreenBtn.setAttribute('title', 'Exit fullscreen (Press ESC)');
           } else {
             fullscreenBtn.setAttribute('aria-label', 'Fullscreen');
-            fullscreenBtn.setAttribute('title', 'Fullscreen');
           }
         }
       });

@@ -191,82 +191,14 @@
   display: block;
 }
 
-/* === 音量滑块 === */
-.volume-control {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 20px;
+.btn-volume .icon-muted path {
+  fill: currentColor;
 }
 
-.volume-slider {
-  width: 200px;
-  height: 6px;
-  border-radius: var(--radius-full);
-  background: var(--progress-bg);
-  outline: none;
-  cursor: pointer;
-  -webkit-appearance: none;
-  appearance: none;
-  transition: all 0.2s ease;
-}
-
-.volume-slider:hover {
-  height: 8px;
-}
-
-/* Webkit浏览器 */
-.volume-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--accent);
-  cursor: pointer;
-  box-shadow: 0 0 12px var(--accent-glow);
-  transition: all 0.2s var(--ease-smooth);
-}
-
-.volume-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 20px var(--accent-glow);
-}
-
-/* Firefox浏览器 */
-.volume-slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  border: none;
-  border-radius: 50%;
-  background: var(--accent);
-  cursor: pointer;
-  box-shadow: 0 0 12px var(--accent-glow);
-  transition: all 0.2s var(--ease-smooth);
-}
-
-.volume-slider::-moz-range-thumb:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 20px var(--accent-glow);
-}
-
-/* 已填充部分的颜色 */
-.volume-slider::-webkit-slider-runnable-track {
-  height: 6px;
-  border-radius: var(--radius-full);
-  background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
-}
-
-.volume-slider::-moz-range-track {
-  height: 6px;
-  border-radius: var(--radius-full);
-  background: var(--progress-bg);
-}
-
-.volume-slider::-moz-range-progress {
-  height: 6px;
-  border-radius: var(--radius-full);
-  background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+.btn-volume .icon-muted line {
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
 }
 
 /* === 进度条（加宽） === */
