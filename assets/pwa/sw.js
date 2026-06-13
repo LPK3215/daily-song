@@ -46,9 +46,11 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (event.request.method !== "GET") return;
-  if (url.origin !== self.location.origin) return;
+  // Allow same-origin and Google Fonts cross-origin requests
+  const isGoogleFonts = url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com";
+  if (url.origin !== self.location.origin && !isGoogleFonts) return;
 
-  if (url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com") {
+  if (isGoogleFonts) {
     event.respondWith(networkFirst(event.request));
     return;
   }

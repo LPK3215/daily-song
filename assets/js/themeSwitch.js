@@ -76,6 +76,7 @@ export function initThemeSwitcher() {
 
 function showKeyboardHint() {
   if (localStorage.getItem('keyboard-hint-shown')) return;
+  injectHintStyles();
 
   const hint = document.createElement('div');
   hint.className = 'keyboard-hint';
@@ -122,39 +123,32 @@ function showKeyboardHint() {
   }, 8000);
 }
 
-// Add animation styles for keyboard hint
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes toastIn {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
+// Add animation styles for keyboard hint (injected on demand)
+let styleInjected = false;
+function injectHintStyles() {
+  if (styleInjected) return;
+  styleInjected = true;
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    @keyframes toastOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(20px); }
     }
-  }
-  @keyframes toastOut {
-    from {
-      opacity: 1;
-      transform: translateY(0);
+    kbd {
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 0 2px;
     }
-    to {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-  }
-  kbd {
-    display: inline-block;
-    padding: 2px 8px;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
-    font-size: 12px;
-    font-weight: 600;
-    margin: 0 2px;
-  }
-`;
-document.head.appendChild(style);
+  `;
+  document.head.appendChild(style);
+}

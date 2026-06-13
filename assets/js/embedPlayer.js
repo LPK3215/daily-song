@@ -6,7 +6,6 @@ export function setupEmbed(song) {
   box.hidden = false;
   const iframe = document.createElement("iframe");
   iframe.src = song.src;
-  iframe.height = 86;
   iframe.allow = "autoplay; encrypted-media";
   iframe.loading = "lazy";
   iframe.referrerPolicy = "no-referrer";

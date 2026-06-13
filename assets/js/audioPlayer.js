@@ -51,28 +51,18 @@ export function setupAudioPlayer(song) {
   audio.addEventListener("play", syncBtn);
   audio.addEventListener("pause", syncBtn);
 
-  /* ===== VBR duration correction (MP3 without Xing header) ===== */
-  let correctedDuration = null;
+  /* ===== Duration helper ===== */
   function getDuration() {
-    return correctedDuration || audio.duration;
+    return audio.duration;
   }
   function updateDurationDisplay() {
-    $("dur").textContent = formatTime(getDuration());
+    $("dur").textContent = formatTime(audio.duration);
   }
 
-  audio.addEventListener("ended", () => {
-    syncBtn();
-    // Detect real duration: if audio ends significantly before reported duration,
-    // the MP3 has no Xing header and browser overestimated the duration
-    if (audio.currentTime > 10 && audio.duration > 10 && audio.currentTime < audio.duration * 0.95) {
-      correctedDuration = audio.currentTime;
-      updateDurationDisplay();
-    }
-  });
+  audio.addEventListener("ended", syncBtn);
 
   /* ===== Restart: back to 0:00 and play ===== */
   restartBtn.addEventListener("click", () => {
-    correctedDuration = null;
     audio.currentTime = 0;
     audio.play().catch(() => showError("Browser blocked playback. Please click again."));
   });
@@ -99,13 +89,19 @@ export function setupAudioPlayer(song) {
   });
 
   /* ===== Progress update ===== */
+  let lastDisplaySec = -1;
   audio.addEventListener("timeupdate", () => {
     const dur = getDuration();
     const pct = dur ? (audio.currentTime / dur) * 100 : 0;
     fill.style.width = pct + "%";
     thumb.style.left = pct + "%";
-    $("cur").textContent = formatTime(audio.currentTime);
-    progress.setAttribute("aria-valuenow", Math.round(pct));
+    // Only update text when the displayed second changes
+    const sec = Math.floor(audio.currentTime);
+    if (sec !== lastDisplaySec) {
+      $("cur").textContent = formatTime(audio.currentTime);
+      progress.setAttribute("aria-valuenow", Math.round(pct));
+      lastDisplaySec = sec;
+    }
   });
 
   /* ===== Progress bar drag seek ===== */
@@ -128,6 +124,10 @@ export function setupAudioPlayer(song) {
     if (dragging) seekFromClientX(e.clientX);
   });
   progress.addEventListener("pointerup", (e) => {
+    dragging = false;
+    progress.releasePointerCapture(e.pointerId);
+  });
+  progress.addEventListener("pointercancel", (e) => {
     dragging = false;
     progress.releasePointerCapture(e.pointerId);
   });
@@ -166,7 +166,7 @@ export function setupAudioPlayer(song) {
     });
     navigator.mediaSession.setActionHandler("seekto", (details) => {
       if (details.seekTime != null && isFinite(details.seekTime)) {
-        audio.currentTime = Math.min(details.seekTime, getDuration());
+        audio.currentTime = Math.max(0, Math.min(details.seekTime, getDuration()));
       }
     });
     navigator.mediaSession.setActionHandler("seekforward", () => {

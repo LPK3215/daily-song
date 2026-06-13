@@ -9,8 +9,11 @@ export function renderMeta(song) {
     const img = new Image();
     img.alt = song.title || "封面";
     img.onload = () => {
+      // Prevent duplicate cover images
+      const coverEl = $("cover");
+      if (coverEl.querySelector("img")) return;
       $("coverFallback").hidden = true;
-      $("cover").prepend(img);
+      coverEl.prepend(img);
     };
     img.onerror = () => {
       /* 加载失败保留音符兜底 */
@@ -35,8 +38,13 @@ export function animateCardContent() {
 }
 
 export function showError(msg) {
-  $("error").textContent = msg || "Failed to load. Please refresh.";
-  $("error").hidden = false;
-  $("controls").hidden = true;
-  $("embed").hidden = true;
+  const errEl = $("error");
+  const controlsEl = $("controls");
+  const embedEl = $("embed");
+  if (errEl) {
+    errEl.textContent = msg || "Failed to load. Please refresh.";
+    errEl.hidden = false;
+  }
+  if (controlsEl) controlsEl.hidden = true;
+  if (embedEl) embedEl.hidden = true;
 }

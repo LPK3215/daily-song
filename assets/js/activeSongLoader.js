@@ -70,7 +70,7 @@ export async function loadActiveSong() {
     throw new Error("Song list loading failed (default-songs.json read error)");
   }
 
-  const song = pickTodaySong(data);
+  const song = pickTodaySong(data, targetKey);
   if (!song) {
     throw new Error("Song list is empty, please add songs to data/default-songs.json.");
   }

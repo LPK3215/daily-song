@@ -2,10 +2,9 @@
 export const $ = (id) => document.getElementById(id);
 
 /** June 13 */
+const dateFmt = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric' });
 export function formatDate(d) {
-  const months = ['January', 'February', 'March', 'April', 'May', 'June',
-                  'July', 'August', 'September', 'October', 'November', 'December'];
-  return `${months[d.getMonth()]} ${d.getDate()}`;
+  return dateFmt.format(d);
 }
 
 /** 2026-06-13（用于 schedule.json 日期键） */
