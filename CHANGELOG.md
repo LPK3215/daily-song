@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+_Nothing yet._
+
+## [1.1.0] - 2026-06-14
+
 ### Added
 - Keyboard shortcuts support (Space, Enter, Arrow keys, T, B, ESC)
 - Fullscreen mode with dedicated button
@@ -80,5 +84,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Auto dark mode support
 - Frosted glass card design with star background
 
-[Unreleased]: https://github.com/LPK3215/daily-song/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/LPK3215/daily-song/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/LPK3215/daily-song/releases/tag/v1.1.0
 [1.0.0]: https://github.com/LPK3215/daily-song/releases/tag/v1.0.0
