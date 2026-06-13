@@ -50,10 +50,29 @@ export function setupAudioPlayer(song) {
 
   audio.addEventListener("play", syncBtn);
   audio.addEventListener("pause", syncBtn);
-  audio.addEventListener("ended", syncBtn);
+
+  /* ===== VBR duration correction (MP3 without Xing header) ===== */
+  let correctedDuration = null;
+  function getDuration() {
+    return correctedDuration || audio.duration;
+  }
+  function updateDurationDisplay() {
+    $("dur").textContent = formatTime(getDuration());
+  }
+
+  audio.addEventListener("ended", () => {
+    syncBtn();
+    // Detect real duration: if audio ends significantly before reported duration,
+    // the MP3 has no Xing header and browser overestimated the duration
+    if (audio.currentTime > 10 && audio.duration > 10 && audio.currentTime < audio.duration * 0.95) {
+      correctedDuration = audio.currentTime;
+      updateDurationDisplay();
+    }
+  });
 
   /* ===== Restart: back to 0:00 and play ===== */
   restartBtn.addEventListener("click", () => {
+    correctedDuration = null;
     audio.currentTime = 0;
     audio.play().catch(() => showError("Browser blocked playback. Please click again."));
   });
@@ -76,12 +95,13 @@ export function setupAudioPlayer(song) {
 
   /* ===== Duration display ===== */
   audio.addEventListener("loadedmetadata", () => {
-    $("dur").textContent = formatTime(audio.duration);
+    updateDurationDisplay();
   });
 
   /* ===== Progress update ===== */
   audio.addEventListener("timeupdate", () => {
-    const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+    const dur = getDuration();
+    const pct = dur ? (audio.currentTime / dur) * 100 : 0;
     fill.style.width = pct + "%";
     thumb.style.left = pct + "%";
     $("cur").textContent = formatTime(audio.currentTime);
@@ -92,8 +112,9 @@ export function setupAudioPlayer(song) {
   function seekFromClientX(clientX) {
     const rect = progress.getBoundingClientRect();
     const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-    if (isFinite(audio.duration) && audio.duration > 0) {
-      audio.currentTime = ratio * audio.duration;
+    const dur = getDuration();
+    if (isFinite(dur) && dur > 0) {
+      audio.currentTime = ratio * dur;
     }
   }
 
@@ -113,11 +134,12 @@ export function setupAudioPlayer(song) {
 
   /* ===== Keyboard: arrow keys ±5s ===== */
   progress.addEventListener("keydown", (e) => {
-    if (!isFinite(audio.duration) || audio.duration <= 0) return;
+    const dur = getDuration();
+    if (!isFinite(dur) || dur <= 0) return;
     if (e.key === "ArrowRight") {
       e.preventDefault();
       e.stopPropagation();
-      audio.currentTime = Math.min(audio.currentTime + 5, audio.duration);
+      audio.currentTime = Math.min(audio.currentTime + 5, dur);
     } else if (e.key === "ArrowLeft") {
       e.preventDefault();
       e.stopPropagation();
@@ -144,12 +166,13 @@ export function setupAudioPlayer(song) {
     });
     navigator.mediaSession.setActionHandler("seekto", (details) => {
       if (details.seekTime != null && isFinite(details.seekTime)) {
-        audio.currentTime = Math.min(details.seekTime, audio.duration);
+        audio.currentTime = Math.min(details.seekTime, getDuration());
       }
     });
     navigator.mediaSession.setActionHandler("seekforward", () => {
-      if (isFinite(audio.duration)) {
-        audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+      const dur = getDuration();
+      if (isFinite(dur)) {
+        audio.currentTime = Math.min(dur, audio.currentTime + 10);
       }
     });
     navigator.mediaSession.setActionHandler("seekbackward", () => {

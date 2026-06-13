@@ -153,8 +153,9 @@
         }
       });
 
-      // Keyboard shortcuts (Playback + Progress control)
+      // Keyboard shortcuts (Playback control)
       // Note: Theme switching shortcuts are handled in themeSwitch.js
+      // Note: Progress bar arrow keys are handled in audioPlayer.js
       document.addEventListener('keydown', (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
@@ -163,19 +164,6 @@
           e.preventDefault();
           const playBtn = document.getElementById('playBtn');
           if (playBtn) playBtn.click();
-        }
-
-        // Arrow keys: Control progress (±5s)
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-          e.preventDefault();
-          const audio = document.getElementById('audio');
-          if (audio && isFinite(audio.duration) && audio.duration > 0) {
-            if (e.key === 'ArrowRight') {
-              audio.currentTime = Math.min(audio.currentTime + 5, audio.duration);
-            } else {
-              audio.currentTime = Math.max(0, audio.currentTime - 5);
-            }
-          }
         }
       });
     });
