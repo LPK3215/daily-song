@@ -89,8 +89,11 @@ export function setupAudioPlayer(song) {
   });
 
   /* ===== Progress update ===== */
+  let dragging = false;
   let lastDisplaySec = -1;
   audio.addEventListener("timeupdate", () => {
+    // During drag the preview drives the UI; skip to avoid fighting it
+    if (dragging) return;
     const dur = getDuration();
     const pct = dur ? (audio.currentTime / dur) * 100 : 0;
     fill.style.width = pct + "%";
@@ -104,32 +107,55 @@ export function setupAudioPlayer(song) {
     }
   });
 
-  /* ===== Progress bar drag seek ===== */
-  function seekFromClientX(clientX) {
+  /* ===== Progress bar drag seek (scrubbing with live preview) ===== */
+  function ratioFromClientX(clientX) {
     const rect = progress.getBoundingClientRect();
-    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  }
+
+  // Move fill/thumb + time text to a preview position without seeking yet
+  function showPreview(ratio) {
     const dur = getDuration();
+    const pct = ratio * 100;
+    fill.style.width = pct + "%";
+    thumb.style.left = pct + "%";
     if (isFinite(dur) && dur > 0) {
-      audio.currentTime = ratio * dur;
+      $("cur").textContent = formatTime(ratio * dur);
+      progress.setAttribute("aria-valuenow", Math.round(pct));
     }
   }
 
-  let dragging = false;
   progress.addEventListener("pointerdown", (e) => {
     dragging = true;
-    progress.setPointerCapture(e.pointerId);
-    seekFromClientX(e.clientX);
+    progress.classList.add("is-dragging");
+    showPreview(ratioFromClientX(e.clientX));
+    // Capture so we keep receiving moves even outside the bar (best-effort)
+    try { progress.setPointerCapture(e.pointerId); } catch (_) {}
   });
   progress.addEventListener("pointermove", (e) => {
-    if (dragging) seekFromClientX(e.clientX);
+    if (dragging) showPreview(ratioFromClientX(e.clientX));
   });
   progress.addEventListener("pointerup", (e) => {
+    if (!dragging) return;
     dragging = false;
-    progress.releasePointerCapture(e.pointerId);
+    progress.classList.remove("is-dragging");
+    // Apply the actual seek once, on release
+    const dur = getDuration();
+    const ratio = ratioFromClientX(e.clientX);
+    if (isFinite(dur) && dur > 0) {
+      audio.currentTime = ratio * dur;
+    }
+    try { progress.releasePointerCapture(e.pointerId); } catch (_) {}
   });
   progress.addEventListener("pointercancel", (e) => {
     dragging = false;
-    progress.releasePointerCapture(e.pointerId);
+    progress.classList.remove("is-dragging");
+    try { progress.releasePointerCapture(e.pointerId); } catch (_) {}
+    // Restore visuals to the real position (seek was cancelled)
+    const dur = getDuration();
+    if (isFinite(dur) && dur > 0) {
+      showPreview(audio.currentTime / dur);
+    }
   });
 
   /* ===== Media Session API (system media controls) ===== */

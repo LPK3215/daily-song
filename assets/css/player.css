@@ -225,6 +225,11 @@
   pointer-events: none;
 }
 
+/* During drag the fill must track the pointer exactly (no transition lag) */
+.progress.is-dragging .progress__fill {
+  transition: none;
+}
+
 .progress__thumb {
   position: absolute;
   top: 50%;
