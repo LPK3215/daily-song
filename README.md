@@ -13,7 +13,9 @@
 **A minimalist "daily song" web player that automatically switches songs every day.**  
 Pure static frontend • Zero build tools • Zero backend • GitHub Pages ready
 
-[🎵 Live Demo](https://lpk3215.github.io/daily-song/) • [📖 Documentation](#documentation) • [🚀 Quick Start](#quick-start) • [🤝 Contributing](./CONTRIBUTING.md)
+[📖 Documentation](#documentation) • [🚀 Quick Start](#quick-start) • [🤝 Contributing](./CONTRIBUTING.md)
+
+> 🚀 **[Live Demo](https://lpk3215.github.io/daily-song/)** — Try it now on GitHub Pages
 
 </div>
 
