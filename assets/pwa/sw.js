@@ -3,8 +3,8 @@
    Network-First: Data files (JSON) & HTML
 */
 
-const CACHE_STATIC = "dailysong-static-v4";
-const CACHE_DATA = "dailysong-data-v4";
+const CACHE_STATIC = "dailysong-static-v5";
+const CACHE_DATA = "dailysong-data-v5";
 
 const STATIC_ASSETS = [
   "/",
