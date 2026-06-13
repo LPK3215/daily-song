@@ -4,8 +4,8 @@
    Media files are NEVER cached to avoid truncated/partial playback issues
 */
 
-const CACHE_STATIC = "dailysong-static-v8";
-const CACHE_DATA = "dailysong-data-v8";
+const CACHE_STATIC = "dailysong-static-v9";
+const CACHE_DATA = "dailysong-data-v9";
 
 const STATIC_ASSETS = [
   "../../",

@@ -4,22 +4,16 @@
 
 import { SONGS_URL } from "./config.js";
 import { pickTodaySong } from "./songSelector.js";
-import { formatDateKey } from "./utils.js";
+import { formatDateKey, parseDateKey, parseFullDate } from "./utils.js";
 import { normalizeEntry } from "./normalizer.js";
 
 const SCHEDULE_URL = "data/date-songs.json";
 
-/** Read preview date from URL params, return formatted date key; return today if no params */
+/** Read preview date from URL params (?date=...); return today if absent/invalid */
 function getTargetDateKey() {
   const params = new URLSearchParams(window.location.search);
-  const dateParam = params.get("date");
-  if (dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
-    const d = new Date(dateParam + "T00:00:00");
-    if (!isNaN(d.getTime())) {
-      return formatDateKey(d);
-    }
-  }
-  return formatDateKey(new Date());
+  const parsed = parseFullDate(params.get("date"));
+  return parsed ? formatDateKey(parsed) : formatDateKey(new Date());
 }
 
 /** Validate song entry (support both new and old formats) */
@@ -42,17 +36,26 @@ function isValidEntry(obj) {
  */
 export async function loadActiveSong() {
   const targetKey = getTargetDateKey();
+  const targetAnnual = targetKey.slice(5); // MM-DD, for annual recurrence
 
-  // 1. Read date-songs.json, match by target date
+  // 1. date-songs.json: match a full date first, then an annual (month-day) key.
+  //    Keys may use several formats (see parseDateKey); non-date keys are skipped.
   let entry = null;
   try {
     const res = await fetch(`${SCHEDULE_URL}?t=${Date.now()}`, { cache: "no-store" });
     if (res.ok) {
       const schedule = await res.json();
-      const matched = schedule[targetKey];
-      if (isValidEntry(matched)) {
-        entry = matched;
+      let fullMatch = null;
+      let annualMatch = null;
+      for (const [rawKey, value] of Object.entries(schedule)) {
+        const parsed = parseDateKey(rawKey);
+        if (!parsed) continue; // skip metadata (_comment, _format, _example, ...)
+        if (parsed.type === "full" && parsed.key === targetKey) fullMatch = value;
+        else if (parsed.type === "annual" && parsed.key === targetAnnual) annualMatch = value;
       }
+      const fullValid = fullMatch != null && isValidEntry(fullMatch);
+      const annualValid = annualMatch != null && isValidEntry(annualMatch);
+      entry = fullValid ? fullMatch : (annualValid ? annualMatch : null);
     }
   } catch (_) {
     // date-songs.json doesn't exist or format error, fallback

@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PWA support (installable to home screen)
 - iframe `sandbox` attribute for embed player security
 - Embed domain whitelist validation in `normalizer.js`
+- Multi-format date keys in `date-songs.json` (`YYYY-MM-DD`, `YYYY/M/D`, annual `MM-DD` recurrence); non-date and invalid keys auto-skipped, full date takes precedence over annual
 - `.gitignore` rule for `ffmpeg.zip`
 
 ### Changed
@@ -28,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved PWA files to `assets/pwa/` directory
 - Global English localization (user-facing content)
 - Improved project structure and organization
-- Service Worker cache version bumped to v8
+- Service Worker cache version bumped to v9
 - Card layout switched from fixed single-screen to flow-based, allowing vertical scroll when content overflows small viewports
 - `pickTodaySong()` now accepts `dateKey` parameter for date-based selection
 - `getDuration()` simplified to return `audio.duration` directly

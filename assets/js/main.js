@@ -1,7 +1,7 @@
 /* main.js - Application entry point
    Loading priority: date-songs.json (exact date match) > default-songs.json (date-based rotation)
    Supports ?date=YYYY-MM-DD to preview songs for specific dates */
-import { $, formatDate } from "./utils.js";
+import { $, formatDate, parseFullDate } from "./utils.js";
 import { loadActiveSong } from "./activeSongLoader.js";
 import { renderMeta, showError, animateCardContent } from "./render.js";
 import { setupAudioPlayer } from "./audioPlayer.js";
@@ -16,16 +16,9 @@ async function main() {
 
   initThemeSwitcher();
 
-  // Display date: use URL param or today
+  // Display date: use URL param (?date=..., flexible format) or today
   const params = new URLSearchParams(window.location.search);
-  const dateParam = params.get("date");
-  let displayDate = new Date();
-  if (dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
-    const d = new Date(dateParam + "T00:00:00");
-    if (!isNaN(d.getTime())) {
-      displayDate = d;
-    }
-  }
+  const displayDate = parseFullDate(params.get("date")) || new Date();
   $("date").textContent = formatDate(displayDate);
 
   let song;
