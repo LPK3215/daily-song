@@ -15,7 +15,11 @@ export function setupAudioPlayer(song) {
   const cover = document.querySelector(".cover");
 
   $("controls").hidden = false;
-  audio.src = song.src;
+  // audio.src is now hardcoded in HTML's <audio> element to ensure complete buffering
+  // If song.src is provided and different from the hardcoded src, use it instead
+  if (song.src && song.src !== audio.getAttribute("src")) {
+    audio.src = song.src;
+  }
 
   /* ===== Play/Pause button state sync ===== */
   function syncBtn() {

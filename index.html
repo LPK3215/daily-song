@@ -63,13 +63,13 @@
 
         <!-- Song info -->
         <div class="meta">
-          <h1 class="meta__title" id="title">Loading...</h1>
-          <p class="meta__artist" id="artist"></p>
+          <h1 class="meta__title" id="title">空白</h1>
+          <p class="meta__artist" id="artist">佚名</p>
         </div>
 
         <!-- Player -->
         <section class="player" id="player">
-          <div class="controls" id="controls" hidden>
+          <div class="controls" id="controls">
             <!-- Three buttons: Restart / Play / Volume -->
             <div class="controls__row">
               <button class="btn-restart" id="restartBtn" type="button" aria-label="Restart">
@@ -110,7 +110,7 @@
               <span id="dur">0:00</span>
             </div>
 
-            <audio id="audio" preload="metadata"></audio>
+            <audio id="audio" preload="auto" src="media/audio/空白.mp3"></audio>
           </div>
 
           <div class="embed" id="embed" hidden></div>
