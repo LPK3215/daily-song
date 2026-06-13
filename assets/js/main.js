@@ -1,8 +1,7 @@
 /* main.js - Application entry point
    Loading priority: date-songs.json (exact date match) > default-songs.json (date-based rotation)
-   Supports ?date=YYYY-MM-DD to preview songs for specific dates
-   Audio <audio> src is also hardcoded in HTML for immediate preloading */
-import { $, formatDate, formatDateKey } from "./utils.js";
+   Supports ?date=YYYY-MM-DD to preview songs for specific dates */
+import { $, formatDate } from "./utils.js";
 import { loadActiveSong } from "./activeSongLoader.js";
 import { renderMeta, showError, animateCardContent } from "./render.js";
 import { setupAudioPlayer } from "./audioPlayer.js";
