@@ -427,20 +427,46 @@ img {
 }
 
 @media (max-width: 768px) {
+  /* 角落按钮缩小 */
   .theme-btn,
-  .bg-btn {
-    top: 24px;
-    width: 44px;
-    height: 44px;
+  .bg-btn,
+  .fullscreen-btn {
+    top: 20px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .theme-btn {
+    right: 20px;
   }
 
   .bg-btn {
-    right: 84px;
+    right: 75px;
+  }
+
+  .fullscreen-btn {
+    right: 130px;
   }
 
   .theme-btn svg,
-  .bg-btn svg {
+  .bg-btn svg,
+  .fullscreen-btn svg {
     width: 18px;
     height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* 小屏幕：隐藏全屏按钮 */
+  .fullscreen-btn {
+    display: none;
+  }
+
+  .bg-btn {
+    right: 75px;
+  }
+
+  .theme-btn {
+    right: 20px;
   }
 }

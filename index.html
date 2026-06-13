@@ -200,6 +200,19 @@
           if (playBtn) playBtn.click();
         }
 
+        // 左右方向键：控制播放进度（±5秒）
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          const audio = document.getElementById('audio');
+          if (audio && isFinite(audio.duration) && audio.duration > 0) {
+            if (e.key === 'ArrowRight') {
+              audio.currentTime = Math.min(audio.duration - 0.1, audio.currentTime + 5);
+            } else {
+              audio.currentTime = Math.max(0, audio.currentTime - 5);
+            }
+          }
+        }
+
         // T 键：切换强调色
         if (e.key.toLowerCase() === 't' && !e.ctrlKey && !e.metaKey && !e.altKey) {
           e.preventDefault();

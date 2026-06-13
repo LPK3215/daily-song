@@ -167,6 +167,23 @@
   font-size: 36px;
   font-weight: 600;
   line-height: 1.2;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  margin: 0;
+  animation: fadeIn 0.6s ease 0.3s both;
+}
+
+/* Loading 状态脉冲动画 */
+.meta__title:empty::after {
+  content: "Loading...";
+  opacity: 0.6;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+}
   letter-spacing: -0.02em;
   color: var(--text-primary);
   text-wrap: balance;
