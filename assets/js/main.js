@@ -1,42 +1,56 @@
 /* main.js - Application entry point
-   Audio is hardcoded in HTML via <audio src="..."> to ensure complete playback.
-   Song info and audio src are defined directly here, bypassing JSON config loading. */
-
-import { $, formatDate } from "./utils.js";
+   Loading priority: date-songs.json (exact date match) > default-songs.json (date-based rotation)
+   Supports ?date=YYYY-MM-DD to preview songs for specific dates
+   Audio <audio> src is also hardcoded in HTML for immediate preloading */
+import { $, formatDate, formatDateKey } from "./utils.js";
+import { loadActiveSong } from "./activeSongLoader.js";
+import { renderMeta, showError, animateCardContent } from "./render.js";
 import { setupAudioPlayer } from "./audioPlayer.js";
-import { animateCardContent } from "./render.js";
+import { setupEmbed } from "./embedPlayer.js";
 import { initThemeSwitcher } from "./themeSwitch.js";
 
-/* ---- Hardcoded song data (edit here to change song) ---- */
-const SONG = {
-  title: "空白",
-  artist: "佚名",
-  source: "local",
-  // src not needed — audio element already has hardcoded src in HTML
-  cover: "",
-  note: "",
-};
-
 async function main() {
+  // Wait for DOM before initializing theme switcher
   if (document.readyState === 'loading') {
     await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
   }
 
   initThemeSwitcher();
 
-  // Display today's date
-  $("date").textContent = formatDate(new Date());
+  // Display date: use URL param or today
+  const params = new URLSearchParams(window.location.search);
+  const dateParam = params.get("date");
+  let displayDate = new Date();
+  if (dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
+    const d = new Date(dateParam + "T00:00:00");
+    if (!isNaN(d.getTime())) {
+      displayDate = d;
+    }
+  }
+  $("date").textContent = formatDate(displayDate);
 
-  // Apply song meta (hardcoded, not loaded from JSON)
-  $("title").textContent = SONG.title;
-  $("artist").textContent = SONG.artist;
-  if (SONG.note) {
-    $("note").textContent = SONG.note;
-    $("note").hidden = false;
+  let song;
+  try {
+    song = await loadActiveSong();
+  } catch (e) {
+    showError(e.message || "Failed to load song");
+    return;
   }
 
-  // Setup audio player with hardcoded song data
-  setupAudioPlayer(SONG);
+  renderMeta(song);
+
+  switch (song.source) {
+    case "local":
+    case "url":
+      setupAudioPlayer(song);
+      break;
+    case "embed":
+      setupEmbed(song);
+      break;
+    default:
+      showError("Unknown source type: " + song.source);
+      return;
+  }
 
   animateCardContent();
 }

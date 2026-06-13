@@ -34,3 +34,6 @@ yarn.lock
 
 # 测试截图（浏览器检查生成）
 /*.png
+
+# 下载的临时工具包
+ffmpeg.zip
