@@ -11,5 +11,8 @@ export function setupEmbed(song) {
   iframe.allow = "autoplay; encrypted-media";
   iframe.loading = "lazy";
   iframe.referrerPolicy = "no-referrer";
+  // Sandbox: allow the embed player to run, but block top-level navigation
+  // (prevents an embedded page from redirecting the user away from the site)
+  iframe.sandbox = "allow-scripts allow-same-origin allow-popups allow-presentation";
   box.appendChild(iframe);
 }

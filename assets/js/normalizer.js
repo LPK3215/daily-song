@@ -2,11 +2,22 @@
 
 const EMBED_HOSTS = ["youtube.com", "youtu.be", "bilibili.com", "spotify.com", "music.163.com"];
 
+/** True if the URL's hostname is an embed host or a subdomain of one */
+function isEmbedHost(src) {
+  let hostname;
+  try {
+    hostname = new URL(src).hostname;
+  } catch (_) {
+    return false;
+  }
+  return EMBED_HOSTS.some(h => hostname === h || hostname.endsWith("." + h));
+}
+
 /** Detect source type from URL string */
 export function detectSourceType(src) {
   if (typeof src !== "string") return "local";
   if (src.startsWith("http://") || src.startsWith("https://")) {
-    if (EMBED_HOSTS.some(h => src.includes(h))) return "embed";
+    if (isEmbedHost(src)) return "embed";
     return "url";
   }
   return "local";
