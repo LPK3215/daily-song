@@ -86,4 +86,4 @@ _Nothing yet._
 
 [Unreleased]: https://github.com/LPK3215/daily-song/compare/v1.1.0...HEAD
 [1.1.0]: https://github.com/LPK3215/daily-song/releases/tag/v1.1.0
-[1.0.0]: https://github.com/LPK3215/daily-song/releases/tag/v1.0.0
+[1.0.0]: https://github.com/LPK3215/daily-song/releases/tag/v1.0-victory

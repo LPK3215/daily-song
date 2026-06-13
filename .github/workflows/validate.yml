@@ -1,0 +1,27 @@
+name: Validate config
+
+# 校验配置驱动型站点的 JSON：语法错误会让线上站静默取不到歌曲
+on:
+  push:
+    paths:
+      - 'data/*.json'
+      - 'assets/pwa/manifest.json'
+      - '.github/workflows/validate.yml'
+  pull_request:
+    paths:
+      - 'data/*.json'
+      - 'assets/pwa/manifest.json'
+      - '.github/workflows/validate.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON config files
+        run: |
+          set -e
+          for f in data/date-songs.json data/default-songs.json assets/pwa/manifest.json; do
+            node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))" "$f"
+            echo "valid: $f"
+          done
