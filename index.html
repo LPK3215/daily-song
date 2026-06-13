@@ -176,10 +176,21 @@
       // 键盘快捷键
       document.addEventListener('keydown', (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        // 空格键或回车键：播放/暂停
+        if ((e.key === ' ' || e.key === 'Enter') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          e.preventDefault();
+          const playBtn = document.getElementById('playBtn');
+          if (playBtn) playBtn.click();
+        }
+
+        // T 键：切换强调色
         if (e.key.toLowerCase() === 't' && !e.ctrlKey && !e.metaKey && !e.altKey) {
           e.preventDefault();
           switchAccent();
         }
+
+        // B 键：切换背景
         if (e.key.toLowerCase() === 'b' && !e.ctrlKey && !e.metaKey && !e.altKey) {
           e.preventDefault();
           switchBg();
