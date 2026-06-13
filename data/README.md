@@ -2,7 +2,7 @@
 
 ## 🎵 两个配置文件
 
-### 1. `schedule.json` - 按日期指定歌曲（优先级最高）
+### 1. `date-songs.json` - 按日期指定歌曲（优先级最高）
 
 指定某个日期播放某首歌，适合节日、纪念日等特殊场合。
 
@@ -36,9 +36,9 @@
 
 ---
 
-### 2. `songs.json` - 轮播列表（备用）
+### 2. `default-songs.json` - 轮播列表（备用）
 
-当 `schedule.json` 中没有指定今天的歌曲时，从这里轮播。
+当 `date-songs.json` 中没有指定今天的歌曲时，从这里轮播。
 
 **格式**：
 ```json
@@ -74,7 +74,7 @@
 
 ### 添加一首歌（指定日期）
 
-编辑 `schedule.json`：
+编辑 `date-songs.json`：
 ```json
 {
   "2026-12-25": ["Last Christmas", "Wham!", "last-christmas.mp3", "xmas.jpg", "圣诞快乐！"]
@@ -83,7 +83,7 @@
 
 ### 添加一首歌（轮播列表）
 
-编辑 `songs.json`：
+编辑 `default-songs.json`：
 ```json
 {
   "anchor": "2026-06-13",

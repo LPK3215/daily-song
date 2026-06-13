@@ -24,10 +24,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved PWA files to `assets/pwa/` directory
 - Global English localization (user-facing content)
 - Improved project structure and organization
+- Service Worker cache version bumped to v6 to purge stale assets
+- `pickTodaySong()` now accepts `dateKey` parameter for date-based selection
+- `getDuration()` simplified to return `audio.duration` directly
+- `formatDate()` refactored to use shared `Intl.DateTimeFormat` instance
+
+### Removed
+- VBR duration correction logic (caused premature playback truncation)
+- Ineffective `iframe.height` assignment in embed player
 
 ### Fixed
-- Audio stopping at 70% progress issue
-- Theme switching toast showing twice
+- VBR MP3 duration correction logic truncating playback prematurely (core bug)
+- `?date=` URL parameter not working with fallback song rotation
+- Service Worker registration 404 on GitHub Pages subpath deployment
+- Service Worker `STATIC_ASSETS` and fetch path matching for subpath deployment
+- PWA manifest icon referencing non-existent file (switched to SVG data URI)
+- `showError()` null reference crash when DOM elements missing
+- Progress bar drag hanging on `pointercancel` event
+- Duplicate cover image insertion on race condition
+- `timeupdate` event firing redundant DOM updates every frame
+- Media Session `seekto` missing lower-bound protection
+- `themeSwitch.js` injecting styles at module load (moved to on-demand)
+- `embedPlayer.js` setting ineffective `iframe.height` property
+- `formatDate()` hardcoded locale (simplified with `Intl.DateTimeFormat`)
+- Theme switching toast showing twice (SW cache purge)
 - Removed unnecessary progress limitations
 
 ## [1.0.0] - 2026-06-13

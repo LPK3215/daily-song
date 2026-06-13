@@ -52,23 +52,21 @@ Pure static frontend • Zero build tools • Zero backend • GitHub Pages read
 daily-song/
 ├── index.html              # Entry point (GitHub Pages)
 ├── assets/
-│   ├── css/                # Modular stylesheets (~800 lines)
+│   ├── css/                # Modular stylesheets (~1100 lines)
 │   │   ├── base.css        #   Reset + theme variables + star background
 │   │   ├── card.css        #   Card layout + cover + song info
-│   │   ├── player.css      #   Player controls + progress bar
-│   │   └── theme.css       #   Theme system (4 × 7 combinations)
-│   ├── js/                 # ES Modules (~1300 lines)
+│   │   └── player.css      #   Player controls + progress bar
+│   ├── js/                 # ES Modules (~630 lines)
 │   │   ├── main.js         #   Entry point, orchestrates all modules
 │   │   ├── config.js       #   Global constants
 │   │   ├── utils.js        #   Date/time formatting utilities
+│   │   ├── normalizer.js   #   Song entry normalization and validation
 │   │   ├── activeSongLoader.js # Load date-scheduled songs
 │   │   ├── songSelector.js #   Select song from rotation list
 │   │   ├── audioPlayer.js  #   Custom HTML5 audio player
 │   │   ├── embedPlayer.js  #   Platform iframe embed player
 │   │   ├── render.js       #   DOM rendering and animations
-│   │   ├── themeSwitch.js  #   Theme switching logic
-│   │   ├── dataLoader.js   #   JSON data loading
-│   │   └── keyboard.js     #   Keyboard shortcut handlers
+│   │   └── themeSwitch.js  #   Theme switching + keyboard shortcuts
 │   └── pwa/                # Progressive Web App files
 │       ├── manifest.json   #   App manifest for installation
 │       └── sw.js           #   Service Worker for offline mode
@@ -273,8 +271,8 @@ This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE
 
 ## 📊 Project Stats
 
-- **Code Lines**: ~2,100 (JavaScript + CSS)
-- **Modules**: 11 ES Modules
+- **Code Lines**: ~1,750 (JavaScript + CSS)
+- **Modules**: 10 ES Modules + 3 CSS files
 - **Themes**: 28 combinations (4 × 7)
 - **Zero**: Build time, dependencies, backend
 
