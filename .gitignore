@@ -1,8 +1,6 @@
-# 隐藏目录（所有以点开头的目录）
-.*
-!.git
-!.gitignore
-!.gitattributes
+# 隐藏文件夹（所有以点开头的目录）
+.*/
+!.git/
 
 # 文件夹缓存
 .DS_Store
