@@ -2,6 +2,8 @@
 import { $ } from "./utils.js";
 
 export function setupEmbed(song) {
+  // Embed source uses an external iframe; hide the (non-functional) audio controls
+  $("controls").hidden = true;
   const box = $("embed");
   box.hidden = false;
   const iframe = document.createElement("iframe");

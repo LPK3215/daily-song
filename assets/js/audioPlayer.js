@@ -165,8 +165,9 @@ export function setupAudioPlayer(song) {
       audio.pause();
     });
     navigator.mediaSession.setActionHandler("seekto", (details) => {
-      if (details.seekTime != null && isFinite(details.seekTime)) {
-        audio.currentTime = Math.max(0, Math.min(details.seekTime, getDuration()));
+      const dur = getDuration();
+      if (details.seekTime != null && isFinite(details.seekTime) && isFinite(dur)) {
+        audio.currentTime = Math.max(0, Math.min(details.seekTime, dur));
       }
     });
     navigator.mediaSession.setActionHandler("seekforward", () => {

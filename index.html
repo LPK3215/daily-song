@@ -157,7 +157,7 @@
       // Note: Theme switching shortcuts are handled in themeSwitch.js
       // Note: Progress bar arrow keys are handled in audioPlayer.js
       document.addEventListener('keydown', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
 
         // Space or Enter: Play/Pause
         if ((e.key === ' ' || e.key === 'Enter') && !e.ctrlKey && !e.metaKey && !e.altKey) {

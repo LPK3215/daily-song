@@ -4,6 +4,7 @@ const EMBED_HOSTS = ["youtube.com", "youtu.be", "bilibili.com", "spotify.com", "
 
 /** Detect source type from URL string */
 export function detectSourceType(src) {
+  if (typeof src !== "string") return "local";
   if (src.startsWith("http://") || src.startsWith("https://")) {
     if (EMBED_HOSTS.some(h => src.includes(h))) return "embed";
     return "url";
@@ -31,6 +32,7 @@ export function normalizeArrayEntry(arr) {
 
 /** Fill optional fields with defaults (old object format) */
 export function normalizeObjectEntry(entry) {
+  entry = entry && typeof entry === "object" ? entry : {};
   return {
     title: entry.title || "Untitled",
     artist: entry.artist || "",
