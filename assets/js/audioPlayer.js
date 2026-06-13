@@ -132,21 +132,6 @@ export function setupAudioPlayer(song) {
     progress.releasePointerCapture(e.pointerId);
   });
 
-  /* ===== Keyboard: arrow keys ±5s ===== */
-  progress.addEventListener("keydown", (e) => {
-    const dur = getDuration();
-    if (!isFinite(dur) || dur <= 0) return;
-    if (e.key === "ArrowRight") {
-      e.preventDefault();
-      e.stopPropagation();
-      audio.currentTime = Math.min(audio.currentTime + 5, dur);
-    } else if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      e.stopPropagation();
-      audio.currentTime = Math.max(0, audio.currentTime - 5);
-    }
-  });
-
   /* ===== Media Session API (system media controls) ===== */
   if ("mediaSession" in navigator) {
     navigator.mediaSession.metadata = new MediaMetadata({

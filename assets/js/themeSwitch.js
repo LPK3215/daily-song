@@ -85,7 +85,8 @@ function showKeyboardHint() {
     <div style="opacity: 0.8; font-size: 13px;">
       Press <kbd>T</kbd> to switch accent color<br>
       Press <kbd>B</kbd> to switch background<br>
-      Press <kbd>Space</kbd> to play/pause
+      Press <kbd>Space</kbd> to play/pause<br>
+      Press <kbd>&larr;</kbd>/<kbd>&rarr;</kbd> to seek &plusmn;5s
     </div>
   `;
   hint.style.cssText = `

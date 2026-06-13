@@ -154,16 +154,29 @@
       });
 
       // Keyboard shortcuts (Playback control)
-      // Note: Theme switching shortcuts are handled in themeSwitch.js
-      // Note: Progress bar arrow keys are handled in audioPlayer.js
+      // Note: Theme switching shortcuts (T/B) are handled in themeSwitch.js
       document.addEventListener('keydown', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return;
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
         // Space or Enter: Play/Pause
+        // Buttons handle their own Space/Enter natively, so skip when one is focused
         if ((e.key === ' ' || e.key === 'Enter') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          if (e.target.tagName === 'BUTTON') return;
           e.preventDefault();
           const playBtn = document.getElementById('playBtn');
           if (playBtn) playBtn.click();
+          return;
+        }
+
+        // Arrow Left/Right: seek ±5s (works anywhere on the page)
+        if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+          const audio = document.getElementById('audio');
+          if (audio && isFinite(audio.duration) && audio.duration > 0) {
+            e.preventDefault();
+            audio.currentTime = e.key === 'ArrowRight'
+              ? Math.min(audio.currentTime + 5, audio.duration)
+              : Math.max(0, audio.currentTime - 5);
+          }
         }
       });
     });
