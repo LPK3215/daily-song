@@ -1,17 +1,15 @@
-/* themeSwitch.js - 双重主题切换器 */
+/* themeSwitch.js - Dual theme switcher */
 
-// 强调色主题
+// Accent color themes
 const accentThemes = ['blue', 'pink', 'cyan', 'green', 'orange', 'violet', 'rose'];
 let accentIndex = 0;
 
-// 背景主题
+// Background themes
 const bgThemes = ['dark', 'light', 'warm', 'purple'];
 let bgIndex = 0;
 
 export function initThemeSwitcher() {
-  console.log('initThemeSwitcher called');
-
-  // 从 localStorage 读取保存的主题
+  // Restore saved themes from localStorage
   const savedAccent = localStorage.getItem('accent-theme');
   const savedBg = localStorage.getItem('bg-theme');
 
@@ -25,9 +23,8 @@ export function initThemeSwitcher() {
     bgIndex = bgThemes.indexOf(savedBg);
   }
 
-  // 强调色切换
+  // Accent color switch
   function switchAccent() {
-    console.log('switchAccent called');
     accentIndex = (accentIndex + 1) % accentThemes.length;
     const newTheme = accentThemes[accentIndex];
     document.body.setAttribute('data-accent', newTheme);
@@ -35,9 +32,8 @@ export function initThemeSwitcher() {
     showThemeToast('accent', newTheme);
   }
 
-  // 背景主题切换
+  // Background theme switch
   function switchBg() {
-    console.log('switchBg called');
     bgIndex = (bgIndex + 1) % bgThemes.length;
     const newTheme = bgThemes[bgIndex];
     document.body.setAttribute('data-bg', newTheme);
@@ -45,48 +41,36 @@ export function initThemeSwitcher() {
     showThemeToast('bg', newTheme);
   }
 
-  // 按钮点击切换
+  // Button click handlers
   const accentBtn = document.getElementById('themeBtn');
   const bgBtn = document.getElementById('bgBtn');
 
-  console.log('accentBtn:', accentBtn);
-  console.log('bgBtn:', bgBtn);
-
   if (accentBtn) {
     accentBtn.addEventListener('click', switchAccent);
-    console.log('Accent button listener added');
-  } else {
-    console.error('themeBtn not found!');
   }
 
   if (bgBtn) {
     bgBtn.addEventListener('click', switchBg);
-    console.log('Background button listener added');
-  } else {
-    console.error('bgBtn not found!');
   }
 
-  // 监听键盘
+  // Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
-    // 检查是否在输入框中
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-      return;
-    }
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-    // T 键：切换强调色
+    // T key: switch accent color
     if (e.key.toLowerCase() === 't' && !e.ctrlKey && !e.metaKey && !e.altKey) {
       e.preventDefault();
       switchAccent();
     }
 
-    // B 键：切换背景色
+    // B key: switch background
     if (e.key.toLowerCase() === 'b' && !e.ctrlKey && !e.metaKey && !e.altKey) {
       e.preventDefault();
       switchBg();
     }
   });
 
-  // 首次加载显示快捷键提示
+  // Show keyboard shortcuts hint on first visit
   setTimeout(() => {
     showKeyboardHint();
   }, 2000);
@@ -110,11 +94,11 @@ function showThemeToast(type, theme) {
     purple: 'Purple Night'
   };
 
-  // 移除旧提示
+  // Remove old toast
   const old = document.querySelector('.theme-toast');
   if (old) old.remove();
 
-  // 创建新提示
+  // Create new toast
   const toast = document.createElement('div');
   toast.className = 'theme-toast';
 
@@ -144,7 +128,7 @@ function showThemeToast(type, theme) {
 
   document.body.appendChild(toast);
 
-  // 2秒后移除
+  // Auto-remove after 2 seconds
   setTimeout(() => {
     toast.style.animation = 'toastOut 0.3s ease';
     setTimeout(() => toast.remove(), 300);
@@ -152,15 +136,12 @@ function showThemeToast(type, theme) {
 }
 
 function showKeyboardHint() {
-  // 检查是否已经显示过
-  if (localStorage.getItem('keyboard-hint-shown')) {
-    return;
-  }
+  if (localStorage.getItem('keyboard-hint-shown')) return;
 
   const hint = document.createElement('div');
   hint.className = 'keyboard-hint';
   hint.innerHTML = `
-    <div style="font-weight: 600; margin-bottom: 8px;">💡 Keyboard Shortcuts</div>
+    <div style="font-weight: 600; margin-bottom: 8px;">Keyboard Shortcuts</div>
     <div style="opacity: 0.8; font-size: 13px;">
       Press <kbd>T</kbd> to switch accent color<br>
       Press <kbd>B</kbd> to switch background<br>
@@ -192,7 +173,7 @@ function showKeyboardHint() {
 
   document.body.appendChild(hint);
 
-  // 8秒后自动移除
+  // Auto-remove after 8 seconds
   setTimeout(() => {
     if (hint.parentNode) {
       hint.style.animation = 'toastOut 0.3s ease';
@@ -202,7 +183,7 @@ function showKeyboardHint() {
   }, 8000);
 }
 
-// 添加动画样式
+// Add animation styles
 const style = document.createElement('style');
 style.textContent = `
   @keyframes toastIn {

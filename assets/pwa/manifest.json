@@ -2,7 +2,7 @@
   "name": "Daily Song",
   "short_name": "Daily Song",
   "description": "One song a day, immersive music experience.",
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#000000",
@@ -12,7 +12,7 @@
       "src": "/media/covers/og.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }

@@ -1,5 +1,4 @@
-/* audioPlayer.js - 核心播放器: 播放/暂停 / 重听 / 进度条 / 时间显示
-   精简版: 仅保留核心播放功能 */
+/* audioPlayer.js - Core player: play/pause, restart, progress bar, time display, volume */
 import { $, formatTime } from "./utils.js";
 import { showError } from "./render.js";
 
@@ -7,6 +6,7 @@ export function setupAudioPlayer(song) {
   const audio = $("audio");
   const playBtn = $("playBtn");
   const restartBtn = $("restartBtn");
+  const volumeBtn = $("volumeBtn");
   const iconPlay = playBtn.querySelector(".icon-play");
   const iconPause = playBtn.querySelector(".icon-pause");
   const progress = $("progress");
@@ -17,26 +17,22 @@ export function setupAudioPlayer(song) {
   $("controls").hidden = false;
   audio.src = song.src;
 
-  /* ===== 播放/暂停 按钮状态同步 ===== */
+  /* ===== Play/Pause button state sync ===== */
   function syncBtn() {
     const playing = !audio.paused && !audio.ended;
     iconPlay.hidden = playing;
     iconPause.hidden = !playing;
     playBtn.setAttribute("aria-label", playing ? "Pause" : "Play");
 
-    // 封面旋转
+    // Cover rotation
     if (cover) {
-      if (playing) {
-        cover.classList.add("is-playing");
-      } else {
-        cover.classList.remove("is-playing");
-      }
+      cover.classList.toggle("is-playing", playing);
     }
   }
 
   syncBtn();
 
-  /* ===== 播放/暂停 ===== */
+  /* ===== Play/Pause toggle ===== */
   function togglePlay() {
     if (audio.paused) {
       audio.play().catch(() => showError("Browser blocked playback. Please click again."));
@@ -47,7 +43,7 @@ export function setupAudioPlayer(song) {
 
   playBtn.addEventListener("click", togglePlay);
 
-  // 封面点击播放/暂停
+  // Cover click to play/pause
   if (cover) {
     cover.addEventListener("click", togglePlay);
   }
@@ -56,23 +52,30 @@ export function setupAudioPlayer(song) {
   audio.addEventListener("pause", syncBtn);
   audio.addEventListener("ended", syncBtn);
 
-  /* ===== 重听: 回到 0:00 并播放 ===== */
+  /* ===== Restart: back to 0:00 and play ===== */
   restartBtn.addEventListener("click", () => {
     audio.currentTime = 0;
     audio.play().catch(() => showError("Browser blocked playback. Please click again."));
   });
 
-  /* ===== 音频错误 ===== */
+  /* ===== Volume button: toggle mute ===== */
+  volumeBtn.addEventListener("click", () => {
+    audio.muted = !audio.muted;
+    volumeBtn.classList.toggle("is-muted", audio.muted);
+    volumeBtn.setAttribute("aria-label", audio.muted ? "Unmute" : "Mute");
+  });
+
+  /* ===== Audio error ===== */
   audio.addEventListener("error", () => {
     showError("Failed to load audio (invalid URL or CORS blocked)");
   });
 
-  /* ===== 时长显示 ===== */
+  /* ===== Duration display ===== */
   audio.addEventListener("loadedmetadata", () => {
     $("dur").textContent = formatTime(audio.duration);
   });
 
-  /* ===== 进度更新 ===== */
+  /* ===== Progress update ===== */
   audio.addEventListener("timeupdate", () => {
     const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
     fill.style.width = pct + "%";
@@ -81,7 +84,7 @@ export function setupAudioPlayer(song) {
     progress.setAttribute("aria-valuenow", Math.round(pct));
   });
 
-  /* ===== 进度条拖动 seek ===== */
+  /* ===== Progress bar drag seek ===== */
   function seekFromClientX(clientX) {
     const rect = progress.getBoundingClientRect();
     const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
@@ -104,7 +107,7 @@ export function setupAudioPlayer(song) {
     progress.releasePointerCapture(e.pointerId);
   });
 
-  /* ===== 键盘: 方向键 +-5s ===== */
+  /* ===== Keyboard: arrow keys ±5s ===== */
   progress.addEventListener("keydown", (e) => {
     if (!isFinite(audio.duration) || audio.duration <= 0) return;
     if (e.key === "ArrowRight") {
@@ -118,7 +121,7 @@ export function setupAudioPlayer(song) {
     }
   });
 
-  /* ===== Media Session API (系统媒体控件) ===== */
+  /* ===== Media Session API (system media controls) ===== */
   if ("mediaSession" in navigator) {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: song.title || "Daily Song",

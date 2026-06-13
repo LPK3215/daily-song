@@ -3,8 +3,8 @@
    Network-First: Data files (JSON) & HTML
 */
 
-const CACHE_STATIC = "dailysong-static-v3";
-const CACHE_DATA = "dailysong-data-v3";
+const CACHE_STATIC = "dailysong-static-v4";
+const CACHE_DATA = "dailysong-data-v4";
 
 const STATIC_ASSETS = [
   "/",
@@ -12,14 +12,16 @@ const STATIC_ASSETS = [
   "/assets/css/base.css",
   "/assets/css/card.css",
   "/assets/css/player.css",
-  "/assets/css/theme.css",
   "/assets/js/utils.js",
   "/assets/js/main.js",
   "/assets/js/render.js",
   "/assets/js/audioPlayer.js",
+  "/assets/js/embedPlayer.js",
   "/assets/js/activeSongLoader.js",
   "/assets/js/songSelector.js",
   "/assets/js/config.js",
+  "/assets/js/normalizer.js",
+  "/assets/js/themeSwitch.js",
   "/assets/pwa/manifest.json",
 ];
 

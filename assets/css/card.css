@@ -184,11 +184,6 @@
   0%, 100% { opacity: 0.6; }
   50% { opacity: 0.3; }
 }
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
-  text-wrap: balance;
-  transition: color 0.4s ease;
-}
 
 .meta__artist {
   font-size: 18px;

@@ -1,7 +1,7 @@
-/* main.js - 应用入口
-   加载优先级: schedule.json 按日期匹配 > songs.json 按日期轮播
-   支持 ?date=YYYY-MM-DD 预览指定日期歌曲 */
-import { $, formatDate } from "./utils.js";
+/* main.js - Application entry point
+   Loading priority: date-songs.json (exact date match) > default-songs.json (date-based rotation)
+   Supports ?date=YYYY-MM-DD to preview songs for specific dates */
+import { $, formatDate, formatDateKey } from "./utils.js";
 import { loadActiveSong } from "./activeSongLoader.js";
 import { renderMeta, showError, animateCardContent } from "./render.js";
 import { setupAudioPlayer } from "./audioPlayer.js";
@@ -9,32 +9,30 @@ import { setupEmbed } from "./embedPlayer.js";
 import { initThemeSwitcher } from "./themeSwitch.js";
 
 async function main() {
-  // 等待 DOM 完全加载后再初始化主题切换器
+  // Wait for DOM before initializing theme switcher
   if (document.readyState === 'loading') {
     await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve));
   }
 
-  // 初始化主题切换器
   initThemeSwitcher();
 
+  // Display date: use URL param or today
   const params = new URLSearchParams(window.location.search);
   const dateParam = params.get("date");
-  let displayDate;
+  let displayDate = new Date();
   if (dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
     const d = new Date(dateParam + "T00:00:00");
     if (!isNaN(d.getTime())) {
       displayDate = d;
     }
   }
-  if (!displayDate) displayDate = new Date();
-
   $("date").textContent = formatDate(displayDate);
 
   let song;
   try {
     song = await loadActiveSong();
   } catch (e) {
-    showError(e.message || "歌曲加载失败");
+    showError(e.message || "Failed to load song");
     return;
   }
 
@@ -49,7 +47,7 @@ async function main() {
       setupEmbed(song);
       break;
     default:
-      showError("未知音源类型: " + song.source);
+      showError("Unknown source type: " + song.source);
       return;
   }
 

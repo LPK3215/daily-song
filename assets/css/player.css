@@ -63,7 +63,7 @@
   transform: scale(1.05);
   box-shadow:
     0 0 60px var(--accent-glow),
-    0 0 120px rgba(99, 102, 241, 0.6),
+    0 0 120px var(--accent-glow),
     inset 0 2px 20px rgba(255, 255, 255, 0.3);
 }
 
@@ -102,7 +102,7 @@
 }
 
 /* 播放时的脉冲动画 */
-.btn-play[aria-label="暂停"]::after {
+.btn-play[aria-label="Pause"]::after {
   content: "";
   position: absolute;
   inset: -12px;
@@ -128,7 +128,7 @@
   height: 56px;
   border-radius: 50%;
   background: var(--btn-bg);
-  color: #ffffff;
+  color: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -145,58 +145,13 @@
   cursor: pointer;
 }
 
-.volume-slider[orient="vertical"] {
-  -webkit-appearance: slider-vertical;
-}
-
-/* Webkit 浏览器滑块圆点 */
-.volume-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--accent);
-  cursor: pointer;
-  box-shadow: 0 0 16px var(--accent-glow);
-  transition: all 0.2s var(--ease-smooth);
-}
-
-.volume-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 24px var(--accent-glow);
-}
-
-/* Firefox 浏览器滑块圆点 */
-.volume-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border: none;
-  border-radius: 50%;
-  background: var(--accent);
-  cursor: pointer;
-  box-shadow: 0 0 16px var(--accent-glow);
-  transition: all 0.2s var(--ease-smooth);
-}
-
-.volume-slider::-moz-range-thumb:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 24px var(--accent-glow);
-}
-
-/* Firefox 进度填充 */
-.volume-slider::-moz-range-progress {
-  background: linear-gradient(to top, var(--accent), var(--accent-secondary));
-  border-radius: var(--radius-full);
-}
-
 /* === 音量按钮 === */
 .btn-volume {
   width: 56px;
   height: 56px;
   border-radius: 50%;
   background: var(--btn-bg);
-  color: #ffffff;
+  color: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;

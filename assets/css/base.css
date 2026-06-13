@@ -158,7 +158,7 @@ html {
 
 body {
   font-family: var(--font-body);
-  color: var(--accent);
+  color: var(--text-primary);
   background: var(--bg-primary);
   min-height: 100vh;
   min-height: 100dvh;
