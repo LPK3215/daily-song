@@ -23,13 +23,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Simplified configuration format from object to array
+- `default-songs.json` switched to flat numeric-keyed format (`"1": [...]`) matching `date-songs.json` style; legacy `{ "songs": [...] }` still supported
 - Renamed configuration files:
   - `schedule.json` → `date-songs.json`
   - `songs.json` → `default-songs.json`
 - Moved PWA files to `assets/pwa/` directory
 - Global English localization (user-facing content)
 - Improved project structure and organization
-- Service Worker cache version bumped to v9
+- Service Worker cache version bumped to v10
 - Card layout switched from fixed single-screen to flow-based, allowing vertical scroll when content overflows small viewports
 - `pickTodaySong()` now accepts `dateKey` parameter for date-based selection
 - `getDuration()` simplified to return `audio.duration` directly
